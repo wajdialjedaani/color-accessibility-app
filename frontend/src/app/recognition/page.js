@@ -1,9 +1,9 @@
 export const metadata = {
-  title: 'Next.js',
+  title: 'Color Recognition',
 }
 
 export default function Page() {
   return (
-    <h1>Main Page</h1>
+    <h1>Recognition Page</h1>
   )
 }

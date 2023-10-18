@@ -1,9 +1,9 @@
 export const metadata = {
-  title: 'Next.js',
+  title: 'Color Palette',
 }
 
 export default function Page() {
   return (
-    <h1>Main Page</h1>
+    <h1>Palette Page</h1>
   )
 }
