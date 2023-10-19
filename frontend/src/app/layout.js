@@ -1,11 +1,14 @@
 import 'bootstrap/dist/css/bootstrap.css';
-import './globals.css'
+import './globals.css';
+import MainMenu from './components/Navigation';
 
-export default function RootLayout({children}) {
-    return <html>
-       <head />
-       <body>
-          {children}
-       </body>
-    </html>
+export default function RootLayout({ children }) {
+  return (
+   <html lang="en">
+      <MainMenu />
+      <main>
+         {children}
+      </main>
+   </html>
+  );
 }
