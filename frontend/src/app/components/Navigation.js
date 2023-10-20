@@ -7,7 +7,6 @@ export default function MainMenu() {
   const pathname = usePathname();
 
   return (
-  <SSRProvider>
     <Navbar bg="light" expand="lg">
       <Container>
         <Navbar.Brand href="/">Color App</Navbar.Brand>
@@ -22,6 +21,5 @@ export default function MainMenu() {
         </Navbar.Collapse>
       </Container>
     </Navbar>
-  </SSRProvider>
   )
 }
