@@ -1,36 +1,34 @@
 'use client'
 
-import { Button } from "react-bootstrap";
-import React, { useState } from 'react';
+import Landing from '../components/Landing';
+import Correction from '../components/Correction';
+import Compare from '../components/Compare';
+import Integration from '../components/Integration';
+import { useState } from 'react';
 
+function MyPage() {
+  const [phase, setPhase] = useState('landing');
 
-export default function Page() {
-  const [selectedFile, setSelectedFile] = useState(null);
-  
-  const handleChange = (e) => {
-    const file = e.target.files[0];
-    setSelectedFile(...selectedFile, file);
+  const handlePhaseChange = (newPhase) => {
+    setPhase(newPhase);
   };
 
-  const handleUpload = () => {
-    if (selectedFile) {
-      console.log('Uploading file:', selectedFile);
-    } else {
-      console.log('Please select a file');
-    }
-  }
   return (
     <div>
-    <div className="box">
-        <input
-        style={{margin: '30% 30%'}}
-        type="file"
-        accept="image/*"
-        onChange={handleChange} />
+      {phase === 'landing' && (
+        <Landing sendPhase={handlePhaseChange}/>
+      )}
+      {phase === 'integration' && (
+        <Integration sendPhase={handlePhaseChange}/>
+      )}
+      {phase === 'correction' && (
+        <Correction sendPhase={handlePhaseChange}/>
+      )}
+      {phase === 'analystFeedback' && (
+        <Compare />
+      )}
     </div>
-    <Button className="upload" style={{ backgroundColor: "#39545B" }} onClick={handleUpload}>
-        GENERATE
-    </Button>
-    </div>
-  )
+  );
 }
+
+export default MyPage;

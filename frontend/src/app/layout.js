@@ -5,10 +5,12 @@ import MainMenu from './components/Navigation';
 export default function RootLayout({ children }) {
   return (
    <html lang="en">
-      <MainMenu />
-      <main>
-         {children}
-      </main>
+      <body>
+         <MainMenu />
+         <main>
+            {children}
+         </main>
+      </body>
    </html>
   );
 }
