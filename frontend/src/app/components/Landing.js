@@ -2,14 +2,19 @@
 
 import { Button } from "react-bootstrap";
 import React, { useState } from 'react';
+import { baseUrl } from "../constants";
 
 export default function Landing({ sendPhase }) {
   const [selectedFile, setSelectedFile] = useState(null);
+  
+  const [fileTest, setFileTest] = useState(null);
   
   const handleChange = (e) => {
     console.log(e.target.files)
     const file = e.target.files[0];
     setSelectedFile(file);
+
+    setFileTest({name: file.name, type: file.type});
   };
 
   const handleUpload = () => {
@@ -22,11 +27,17 @@ export default function Landing({ sendPhase }) {
     const formData = new FormData();
     formData.append('file', selectedFile);
 
-    fetch('/upload', {
+
+    fetch(`${baseUrl}files/`, {
+      mode: 'cors',
       method: 'POST',
-      body: formData,
+      headers: {
+        'Content-Type': 'application/json', // change to multiform/data
+      },
+      body: JSON.stringify(fileTest) // test with fileName and fileType
     })
       .then((response) => {
+        console.log(response);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
