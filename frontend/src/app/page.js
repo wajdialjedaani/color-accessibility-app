@@ -15,10 +15,11 @@ export default function Page() {
         Discover our Color Accessibility App for an inclusive and vibrant digital experience.
       </div>
       <div style={{marginTop: 60}}>
-        <Button className="main-button" style={{ backgroundColor: "#E0835A" }} href="/recognition">Color Recognition</Button>
-        <Button className="main-button" style={{ backgroundColor: "#B4AF93" }} href="/palette">Color Palette</Button>
-        <Button className="main-button" style={{ backgroundColor: "#39545B" }} href="/simulator">Color Simulator</Button>
+        <Button className="main-button" style={{ backgroundColor: "#E0835A" }} href="/pages/recognition">Color Recognition</Button>
+        <Button className="main-button" style={{ backgroundColor: "#B4AF93" }} href="/pages/palette">Color Palette</Button>
+        <Button className="main-button" style={{ backgroundColor: "#39545B" }} href="/pages/simulator">Color Simulator</Button>
       </div>
+      <div>
       <div className="element">
         <p> Color Recognition </p>
         <p className="text"> 
@@ -43,6 +44,7 @@ export default function Page() {
           into the world of color-blindness. Experience popular color-blindness types 
           realistically, allowing you to design with empathy and understanding.
         </p>
+      </div>
       </div>
     </center>
   )

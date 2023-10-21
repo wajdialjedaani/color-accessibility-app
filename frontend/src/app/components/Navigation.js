@@ -14,9 +14,9 @@ export default function MainMenu() {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
             <Nav.Link href="/" className={"/" === pathname ? "active fw-bold" : ""}>Home</Nav.Link>
-            <Nav.Link href="/palette" className={"/palette" === pathname ? "active fw-bold" : ""} >Color Palette</Nav.Link>
-            <Nav.Link href="/recognition" className={"/recognition" === pathname ? "active fw-bold" : ""}>Color Recognition</Nav.Link>
-            <Nav.Link href="/simulator" className={"/simulator" === pathname ? "active fw-bold" : ""}>Color Simulator</Nav.Link>
+            <Nav.Link href="/pages/palette" className={"/pages/palette" === pathname ? "active fw-bold" : ""} >Color Palette</Nav.Link>
+            <Nav.Link href="/pages/recognition" className={"/pages/recognition" === pathname ? "active fw-bold" : ""}>Color Recognition</Nav.Link>
+            <Nav.Link href="/pages/simulator" className={"/pages/simulator" === pathname ? "active fw-bold" : ""}>Color Simulator</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>
