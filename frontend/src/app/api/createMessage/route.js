@@ -1,4 +1,3 @@
-
 export async function POST( req) {
   const {message} = await req.json();
   const apiKey = process.env.OPENAI_API_KEY
@@ -26,6 +25,6 @@ export async function POST( req) {
     return Response.json(data);
   } catch (error) {
     // res.status(500).json({ error: error.message })
-    return Response.json({ error: error.message, "one": "yoasd" });
+    return Response.json({ error: error.message });
   }
 }

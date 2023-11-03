@@ -77,3 +77,38 @@ body {
     color-scheme: dark;
   }
 }
+
+.chatbox-messages {
+  display: flex;
+  background-color: #3e5ca2;
+  flex-direction: column;
+  height: 300px; /* set the height as per your requirement */
+  overflow-y: scroll; /* add scrollbar if the messages overflow */
+  scrollbar-width: thin;
+  scrollbar-color: red orange;
+
+  
+}
+
+.message {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.message.assistant {
+  align-self: flex-start;
+  background-color: #9ada3a;
+  border-radius: 10px;
+  padding: 10px;
+  max-width: 70%;
+}
+
+.message.user {
+  align-self: flex-end;
+  background-color: #85656F;
+  color: #fff;
+  border-radius: 10px;
+  padding: 10px;
+  max-width: 70%;
+}
