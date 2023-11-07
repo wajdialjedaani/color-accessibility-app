@@ -1,21 +1,20 @@
 import Image from 'next/image';
-import pic from '../public/example.png';
-import { Card, ListGroup } from 'react-bootstrap';
-import React, { useRef, useEffect, useState  } from 'react';
+// import pic from '../public/example.png';
+import React, { useRef, useState } from 'react';
+import ColorInfo from './ColorInfo';
 
-
-const Integration = () => {
+const Integration = ({ sendPhase, file }) => {
     const imageRef = useRef(null);
     const [color, setColor] = useState({ name: '', hex: '', rgb: '' });
-
-
 
     const findColorName = async (input) => {
         const red = input[0];
         const green = input[1];
         const blue = input[2];
         try {
-            const response = await fetch(`https://www.thecolorapi.com/id?rgb=${red},${green},${blue}&format=json`)
+            const response = await fetch(
+                `https://www.thecolorapi.com/id?rgb=${red},${green},${blue}&format=json`
+            );
             const data = await response.json();
             const name = data.name.value;
             const hex = data.hex.value;
@@ -25,7 +24,6 @@ const Integration = () => {
             console.log(error);
         }
     };
-
 
     const handleImageClick = (e) => {
         const canvas = document.createElement('canvas');
@@ -40,27 +38,23 @@ const Integration = () => {
         const pixelData = ctx.getImageData(x, y, 1, 1).data;
         findColorName(pixelData);
     };
+
     return (
-        <div>
-            <div className="box">
-                <Image 
-                    src={pic} 
-                    style={{ width: '100%', height: 'auto' }}
+        <div className="d-flex flex-md-row">
+            <div className="m-5 bg-white border border-3 border-dark rounded-18 col-8">
+                <Image
+                    src={URL.createObjectURL(file)}
+                    fill
                     ref={imageRef}
                     alt="Image"
                     onClick={handleImageClick}
                 />
             </div>
-            <Card style={{ width: '18rem' }}>
-                <Card.Header>Color Picker</Card.Header>
-                <ListGroup variant="flush">
-                    <ListGroup.Item>Name : {color.name}</ListGroup.Item>
-                    <ListGroup.Item>HEX: {color.hex}</ListGroup.Item>
-                    <ListGroup.Item>RGB: {color.rgb}</ListGroup.Item>
-                </ListGroup>
-            </Card>
+            <div className=" m-5 col-4 d-flex flex-column">
+                <ColorInfo color={color} />
+            </div>
         </div>
     );
-}
+};
 
 export default Integration;
