@@ -1,7 +1,7 @@
-import Image from 'next/image';
 // import pic from '../public/example.png';
 import React, { useRef, useState } from 'react';
 import ColorInfo from './ColorInfo';
+import { Row, Col, Image } from 'react-bootstrap';
 
 const Integration = ({ sendPhase, file }) => {
     const imageRef = useRef(null);
@@ -40,20 +40,22 @@ const Integration = ({ sendPhase, file }) => {
     };
 
     return (
-        <div className="d-flex flex-md-row">
-            <div className="m-5 bg-white border border-3 border-dark rounded-18 col-8">
-                <Image
-                    src={URL.createObjectURL(file)}
-                    fill
-                    ref={imageRef}
-                    alt="Image"
-                    onClick={handleImageClick}
-                />
+      <Row style={{margin: "2rem", width: "100%", flex: "1.5 1.5"}}>
+        <Col md={9} style={{display: "flex", justifyContent: "center"}}>
+            <div style={{maxHeight: "50rem"}}>
+                <Image 
+                src={URL.createObjectURL(file)} 
+                ref={imageRef}
+                alt="Image"
+                onClick={handleImageClick}
+                fluid 
+                style={{maxHeight: "50rem"}}/>
             </div>
-            <div className=" m-5 col-4 d-flex flex-column">
-                <ColorInfo color={color} />
-            </div>
-        </div>
+        </Col>
+        <Col md={3}>
+            <ColorInfo color={color} />
+        </Col>
+      </Row>
     );
 };
 

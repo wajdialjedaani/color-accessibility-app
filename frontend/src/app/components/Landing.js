@@ -27,30 +27,30 @@ export default function Landing({ sendPhase }) {
         const formData = new FormData();
         formData.append('file', image);
 
-        // fetch(`${baseUrl}files/`, {
-        //     mode: 'cors',
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json', // change to multiform/data
-        //     },
-        //     body: JSON.stringify(fileTest), // test with fileName and fileType
-        // })
-        //     .then((response) => {
-        //         console.log(response);
-        //         if (!response.ok) {
-        //             throw new Error('Network response was not ok');
-        //         }
-        //         return response.json(); // or response.text() if the response is not JSON
-        //     })
-        //     .then((data) => {
-        //         console.log(data);
-        //     })
-        //     .catch((error) => {
-        //         console.error(
-        //             'There was a problem with the fetch operation:',
-        //             error
-        //         );
-        //     });
+        fetch(`${baseUrl}files/`, {
+            mode: 'cors',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json', // change to multiform/data
+            },
+            body: JSON.stringify(fileTest), // test with fileName and fileType
+        })
+            .then((response) => {
+                console.log(response);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json(); // or response.text() if the response is not JSON
+            })
+            .then((data) => {
+                console.log(data);
+            })
+            .catch((error) => {
+                console.error(
+                    'There was a problem with the fetch operation:',
+                    error
+                );
+            });
 
         sendPhase({
             phase: 'integration',
@@ -61,7 +61,6 @@ export default function Landing({ sendPhase }) {
         <div>
             <div className="box">
                 <input
-                    style={{ margin: '30% 30%' }}
                     type="file"
                     accept="image/*"
                     onChange={handleChange}

@@ -17,7 +17,7 @@ const ColorInfo = ({ color }) => {
 
     return (
         <Card style={{ width: '18rem' }}>
-            <Card.Header>Color Picker</Card.Header>
+            <Card.Header>Color Info</Card.Header>
             <ListGroup variant="flush">
                 <ListGroup.Item>
                     {color.name ? (
