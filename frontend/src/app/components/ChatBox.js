@@ -1,4 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
+import { Button, Form, FormControl, FormGroup } from 'react-bootstrap';
 
 function Chatbox() {
   const [content, setContent] = useState([]);
@@ -77,8 +80,13 @@ function Chatbox() {
           onChange={handleChange}
           placeholder="Type your message..."
         />
-        <button type="submit" onClick={handleSubmit}>Send</button>
-        <button type="button" onClick={handleClear}>Clear</button>
+        
+        <Button onClick={handleSubmit} variant="info">
+          <FontAwesomeIcon icon={faPaperPlane} size="l" />
+        </Button>
+        <Button onClick={handleClear} variant="text">
+          Clear
+        </Button>
       </form>
     </div>
   );
