@@ -80,25 +80,25 @@ body {
 
 .chatbox-messages {
   display: flex;
-  background-color: #3e5ca2;
+  background-color: white;
   flex-direction: column;
   height: 300px; /* set the height as per your requirement */
   overflow-y: scroll; /* add scrollbar if the messages overflow */
   scrollbar-width: thin;
   scrollbar-color: red orange;
-
-  
 }
 
 .message {
   display: flex;
   flex-direction: column;
-  margin: 10px;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  border-radius: 15%;
 }
 
 .message.assistant {
   align-self: flex-start;
-  background-color: #9ada3a;
+  background-color: #F9EFCB;
   border-radius: 10px;
   padding: 10px;
   max-width: 70%;
@@ -106,8 +106,7 @@ body {
 
 .message.user {
   align-self: flex-end;
-  background-color: #85656F;
-  color: #fff;
+  background-color: #CED4DA;
   border-radius: 10px;
   padding: 10px;
   max-width: 70%;
