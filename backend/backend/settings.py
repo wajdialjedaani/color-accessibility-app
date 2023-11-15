@@ -74,8 +74,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
-# MEDIA_ROOT =  os.path.join(BASE_DIR, 'media')
-# MEDIA_URL = '/media/'
+#MEDIA_ROOT =  os.path.join(BASE_DIR, 'media')
+#MEDIA_URL = '/media/'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases

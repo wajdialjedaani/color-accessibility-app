@@ -7,4 +7,4 @@ from .models import FileUpload
 
 class FileUploadView(viewsets.ModelViewSet):
     serializer_class = FileUploadSerializer
-    queryset = FileUpload.objects.all()
+    queryset = FileUpload.objects.all().order_by('-date_uploaded')

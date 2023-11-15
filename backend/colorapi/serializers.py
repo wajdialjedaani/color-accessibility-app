@@ -4,4 +4,4 @@ from .models import FileUpload
 class FileUploadSerializer(serializers.ModelSerializer):
     class Meta:
         model = FileUpload
-        fields = ('name', 'type')
+        fields = '__all__'

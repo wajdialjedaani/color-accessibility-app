@@ -1,11 +1,53 @@
 'use client';
 
-import { Button } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 import React, { useState } from 'react';
 import { baseUrl } from '../constants';
+import axios from 'axios'
+import { responsivePropType } from 'react-bootstrap/esm/createUtilityClasses';
 
 export default function Landing({ sendPhase }) {
+
+    /*
+    const [files, setFiles] = useState()
+    const [isLoading, setIsLoading] = useState(false);
     const [image, setImage] = useState(null);
+
+    const handleUpload = (files) => {
+        setIsLoading(true);
+        setFiles(files);
+        setImage(null);
+        console.log(files)
+
+    }
+
+
+
+    const sendData = () => {
+        
+
+        setIsLoading(true);
+
+        const formData = new FormData();
+        formData.append('image', files);
+
+        axios.post(`${baseUrl}files/`, formData, {
+            headers: {
+                accept: 'application/json',
+                'content-type': 'multipart/form-data'
+            },
+        })
+        .then((response) => {
+            console.log(response)
+        })
+        .catch((err) => console.log(err));
+    }
+    */
+
+
+    
+    const [image, setImage] = useState(null);
+    const [files, setFiles] = useState(null);
 
     const [fileTest, setFileTest] = useState(null);
 
@@ -13,6 +55,7 @@ export default function Landing({ sendPhase }) {
         console.log(e.target.files);
         const file = e.target.files[0];
         setImage(file);
+        setFiles(null);
 
         setFileTest({ name: file.name, type: file.type });
     };
@@ -25,38 +68,39 @@ export default function Landing({ sendPhase }) {
         }
 
         const formData = new FormData();
-        formData.append('file', image);
+        formData.append('image', image);
 
-        fetch(`${baseUrl}files/`, {
-            mode: 'cors',
-            method: 'POST',
+        axios.post(`${baseUrl}files/`, formData, {
             headers: {
-                'Content-Type': 'application/json', // change to multiform/data
+                accept: 'application/json',
+                'content-type': 'multipart/form-data'
             },
-            body: JSON.stringify(fileTest), // test with fileName and fileType
         })
-            .then((response) => {
-                console.log(response);
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
+        .then((response) => {
+            console.log(response)
+            getResult(response);
+        })
+        .catch((err) => console.log(err));
+
+        const getResult = (obj) => {
+            axios.get(`${baseUrl}files/${obj.data.id}/`, {
+                headers: {
+                    accept: 'application/json',
                 }
-                return response.json(); // or response.text() if the response is not JSON
             })
-            .then((data) => {
-                console.log(data);
+            .then((response) => {
+                setImage(response)
+                console.log(response)
             })
-            .catch((error) => {
-                console.error(
-                    'There was a problem with the fetch operation:',
-                    error
-                );
-            });
+            .catch((err) => console.log(err));
+        }
 
         sendPhase({
             phase: 'integration',
             file: image,
         });
     };
+
     return (
         <div>
             <div className="box">
