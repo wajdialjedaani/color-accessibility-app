@@ -78,6 +78,7 @@ export default function Landing({ sendPhase }) {
         })
         .then((response) => {
             console.log(response)
+            console.log(JSON.parse(response.data.label))
             getResult(response);
         })
         .catch((err) => console.log(err));

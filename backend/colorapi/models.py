@@ -1,17 +1,19 @@
 import cv2
 import os
-import ssl
 import numpy as np
 import tensorflow as tf
 from django.conf import settings
 from django.db import models
 from PIL import Image
+import pandas as pd
+import joblib
 
 
 class FileUpload(models.Model):
     image = models.ImageField(upload_to='images')
     result = models.CharField(max_length=250, blank=True)
     date_uploaded = models.DateTimeField(auto_now_add=True)
+    label = models.JSONField(null=True, blank=True)
     
     def __str__(self):
         return 'Image uploaded at {}'.format(self.date_uploaded.strftime('%Y-%m-%d %H:%M'))
@@ -41,42 +43,36 @@ class FileUpload(models.Model):
 
         return super().save(*args, **kwargs)
     '''
-    def convert_prediction_to_color_name(prediction):
-    # Logic to map model predictions to color names or labels
-    # Example logic:
-        color_names = ['Red', 'Green', 'Blue', 'Yellow', 'Orange', 'Pink', 'Purple', 'Brown', 'Grey', 'Black', 'White']
-        predicted_label = np.argmax(prediction)  # Assuming prediction is an array of probabilities
-        color_label = color_names[predicted_label]
-        return color_label
-
     def save(self, *args, **kwargs):
         try:
             # Load the color recognition model
-            color_model = tf.keras.models.load_model('path_to_color_recognition_model.h5')  # Replace with the actual path
+            model_path = os.path.join(os.path.dirname(__file__), 'models', 'color.pkl')
+            color_model = joblib.load(model_path)            
 
             # Existing code to process the uploaded image
             img = Image.open(self.image)
-            img_array = cv2.imread(self.image.path)
-            # ... additional processing ...
+            #img_array = cv2.imread(img)
+            img_array = np.array(img)
+            dimensions = (299, 299, 299)
+            resized_array = np.resize(img_array, dimensions)
 
             # Extract RGB values from the processed image
-            red_channel = img_array[:, :, 0]
-            green_channel = img_array[:, :, 1]
-            blue_channel = img_array[:, :, 2]
+            red_channel = resized_array[:, :, 0]
+            green_channel = resized_array[:, :, 1]
+            blue_channel = resized_array[:, :, 2]
 
-            # Combine RGB channels into a single array
-            image_rgb = np.array([red_channel.ravel(), green_channel.ravel(), blue_channel.ravel()]).T
+            # from trim model
+            image_df = pd.DataFrame({'red': red_channel.ravel(),
+                                     'green': green_channel.ravel(),
+                                     'blue': blue_channel.ravel()})
+            
+            
+            predictions = color_model.predict(image_df)
 
-            # Use color recognition model to predict the color
-            color_prediction = color_model.predict(image_rgb)
+            predicted = np.argmax(predictions, axis=1)
+            predicted = pd.DataFrame(predicted, columns=['Labels']).to_json()
 
-            color_names = ['Red', 'Green', 'Blue', 'Yellow', 'Orange', 'Pink', 'Purple', 'Brown', 'Grey', 'Black', 'White']
-            predicted_label = np.argmax(color_prediction)  # Assuming prediction is an array of probabilities
-            color_label = color_names[predicted_label]
-
-            # Save the predicted color label to self.result
-            self.result = color_label
-            print('Color recognized successfully:', color_label)
+            self.label = predicted
         except Exception as e:
             print('Color recognition failed:', e)
 
