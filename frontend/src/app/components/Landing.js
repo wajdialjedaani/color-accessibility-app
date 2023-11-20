@@ -23,7 +23,7 @@ export default function Landing({ sendPhase }) {
         const formData = new FormData();
         formData.append('image', image);
 
-        uploadImage(formData).then(data => getImageById(data?.id).then(data => setImage(data.image)))
+        uploadImage(formData).then(data => getImageById(data?.id).then(data => setImage(data?.image)))
             
         sendPhase({
             phase: 'integration',
