@@ -26,7 +26,8 @@ class FileUpload(models.Model):
 
             img_array = np.array(img)
             dimensions = (299, 299, 299)
-            resized_array = np.resize(img_array, dimensions)
+            # resized_array = np.resize(img_array, dimensions)
+            resized_array = img_array
 
             # Extract RGB values from the processed image
             red_channel = resized_array[:, :, 0]
