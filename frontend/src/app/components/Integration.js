@@ -2,12 +2,13 @@
 import React, { useRef, useState } from 'react';
 import ColorInfo from './ColorInfo';
 import { Row, Col, Image } from 'react-bootstrap';
+import { color_dict } from '../constants';
 
-const Integration = ({ sendPhase, file }) => {
+const Integration = ({ sendPhase, file, labels }) => {
     const imageRef = useRef(null);
-    const [color, setColor] = useState({ name: '', hex: '', rgb: '' });
+    const [color, setColor] = useState({ name: '', hex: '', rgb: '', label: '' });
 
-    const findColorName = async (input) => {
+    const findColorName = async (input, label) => {
         const red = input[0];
         const green = input[1];
         const blue = input[2];
@@ -19,7 +20,8 @@ const Integration = ({ sendPhase, file }) => {
             const name = data.name.value;
             const hex = data.hex.value;
             const rgb = data.rgb.value;
-            setColor({ name, hex, rgb });
+
+            setColor({ name, hex, rgb, label });
         } catch (error) {
             console.log(error);
         }
@@ -36,12 +38,15 @@ const Integration = ({ sendPhase, file }) => {
         ctx.drawImage(imageRef.current, 0, 0, canvas.width, canvas.height);
 
         const pixelData = ctx.getImageData(x, y, 1, 1).data;
-        findColorName(pixelData);
+
+        const colorIndex = labels[y * canvas.width + x];
+
+        findColorName(pixelData, color_dict[colorIndex]);
     };
 
     return (
-      <Row style={{margin: "2rem", width: "100%", flex: "1.5 1.5"}}>
-        <Col md={9} style={{display: "flex", justifyContent: "center"}}>
+      <div style={{margin: "2rem", width: "100%", display: "flex", justifyContent: "space-evenly"}}>
+        <div style={{display: "flex", justifyContent: "center"}}>
             <div style={{maxHeight: "50rem"}}>
                 <Image 
                 src={URL.createObjectURL(file)} 
@@ -51,11 +56,11 @@ const Integration = ({ sendPhase, file }) => {
                 fluid 
                 style={{maxHeight: "50rem"}}/>
             </div>
-        </Col>
-        <Col md={3}>
+        </div>
+        <div>
             <ColorInfo color={color} />
-        </Col>
-      </Row>
+        </div>
+      </div>
     );
 };
 

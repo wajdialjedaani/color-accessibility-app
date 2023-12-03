@@ -1,11 +1,12 @@
 'use client';
 
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, Spinner } from 'react-bootstrap';
 import React, { useState } from 'react';
-import { uploadImage, getImageById } from '../api/image/route'
+import { uploadImage } from '../api/image/route'
 
 export default function Landing({ sendPhase }) {
     const [image, setImage] = useState(null);
+    const [isLoad, setIsLoad] = useState(false);
 
     const handleChange = (e) => {
         console.log(e.target.files);
@@ -20,15 +21,21 @@ export default function Landing({ sendPhase }) {
             console.log('Please select a file');
         }
 
+        setIsLoad(true);
+
         const formData = new FormData();
         formData.append('image', image);
 
-        uploadImage(formData).then(data => getImageById(data.data?.id).then(data => setImage(data?.image)))
-            
-        sendPhase({
-            phase: 'integration',
-            file: image,
+        uploadImage(formData).then(res => {
+            console.log(res.data);
+            setIsLoad(false);
+            sendPhase({
+                phase: 'integration',
+                file: image,
+                labels: res?.data?.label.Labels
+            });
         });
+        
     };
 
     return (
@@ -47,6 +54,38 @@ export default function Landing({ sendPhase }) {
             >
                 GENERATE
             </Button>
+
+            <div style={{ position: 'relative' }}>
+            {isLoad && (
+                <div
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: 'rgba(0, 0, 0, 0.5)', 
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        zIndex: 9999, 
+                    }}
+                >
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            gap: '1rem',
+                            color: 'white',
+                        }}
+                    >
+                        <Spinner animation="border" variant="light" />
+                        <span>Analyzing your image. Please hold on for a moment.</span>
+                    </div>
+                </div>
+            )}
+        </div>
         </div>
     );
 }
