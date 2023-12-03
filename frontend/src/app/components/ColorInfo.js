@@ -73,6 +73,24 @@ const ColorInfo = ({ color }) => {
                         <div>RGB:</div>
                     )}
                 </ListGroup.Item>
+                <ListGroup.Item>
+                    {color.label ? (
+                        <OverlayTrigger
+                            placement="top-end"
+                            overlay={
+                                <Tooltip id={`tooltip-${color.label}`}>
+                                    {tooltipText}
+                                </Tooltip>
+                            }
+                        >
+                            <div onClick={() => handleCopyClick(color.label)}>
+                                Color Classification: {color.label}
+                            </div>
+                        </OverlayTrigger>
+                    ) : (
+                        <div>Color Classification:</div>
+                    )}
+                </ListGroup.Item>
             </ListGroup>
         </Card>
     );

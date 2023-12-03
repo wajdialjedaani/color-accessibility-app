@@ -10,6 +10,7 @@ function MyPage() {
     const [phase, setPhase] = useState({
         phase: 'landing',
         file: null,
+        labels: null
     });
 
     const handlePhaseChange = (newPhase) => {
@@ -22,7 +23,7 @@ function MyPage() {
                 <Landing sendPhase={handlePhaseChange} />
             )}
             {phase.phase === 'integration' && (
-                <Integration sendPhase={handlePhaseChange} file={phase.file} />
+                <Integration sendPhase={handlePhaseChange} file={phase.file} labels={phase.labels}/>
             )}
             {phase.phase === 'correction' && (
                 <Correction sendPhase={handlePhaseChange} />
