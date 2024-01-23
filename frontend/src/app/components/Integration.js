@@ -1,7 +1,7 @@
 // import pic from '../public/example.png';
 import React, { useRef, useState } from 'react';
 import ColorInfo from './ColorInfo';
-import { Row, Col, Image } from 'react-bootstrap';
+import { Image, Form, Button } from 'react-bootstrap';
 import { color_dict } from '../constants';
 
 const Integration = ({ sendPhase, file, labels }) => {
@@ -59,6 +59,22 @@ const Integration = ({ sendPhase, file, labels }) => {
         </div>
         <div>
             <ColorInfo color={color} />
+
+            <div style={{marginTop: '2rem'}}>
+                <h5>Color Correct</h5>
+                <div style={{height: '1px', width: '100%', backgroundColor: 'black'}}></div>
+                <div style={{margin: "1rem auto 0.5rem auto"}}>Choose a Type of Color Blindness</div>
+                <Form.Select aria-label="Default select example" style={{marginTop: '1rem'}}>
+                    <option value="1">Yellow</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </Form.Select>
+                <Button
+                style={{ backgroundColor: '#39545B', margin: "1rem auto" }}
+            >
+                CORRECT COLORS
+            </Button>
+            </div>
         </div>
       </div>
     );

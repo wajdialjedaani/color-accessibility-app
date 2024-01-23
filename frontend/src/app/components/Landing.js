@@ -14,6 +14,39 @@ export default function Landing({ sendPhase }) {
         setImage(file);
     };
 
+    const resizeImageByScale = (imageFile) => {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                const scale = chooseImageScale(img.width, img.height);
+
+                const newWidth = img.width * scale;
+                const newHeight = img.height * scale;
+    
+                canvas.width = newWidth;
+                canvas.height = newHeight;
+    
+                ctx.drawImage(img, 0, 0, newWidth, newHeight);
+    
+                canvas.toBlob((blob) => {
+                    resolve(new File([blob], imageFile.name, { type: 'image/jpeg' }));
+                }, 'image/jpeg');
+            };
+    
+            img.src = URL.createObjectURL(imageFile);
+        });
+    };
+
+    const chooseImageScale = (w, h) => {
+        if (w*h <= 300000) return 1;
+      const scale = Math.sqrt(300000 / ( w*h));
+      console.log(scale);
+      return scale;
+    }
+
     const handleUpload = () => {
         if (image) {
             console.log('Uploading file:', image);
@@ -22,20 +55,26 @@ export default function Landing({ sendPhase }) {
         }
 
         setIsLoad(true);
-
         const formData = new FormData();
-        formData.append('image', image);
 
-        uploadImage(formData).then(res => {
-            console.log(res.data);
-            setIsLoad(false);
-            sendPhase({
-                phase: 'integration',
-                file: image,
-                labels: res?.data?.label.Labels
+        resizeImageByScale(image)
+            .then(resizedImage => {
+                formData.append('image', resizedImage)
+
+                uploadImage(formData).then(res => {
+                console.log(res.data);
+                setIsLoad(false);
+                sendPhase({
+                    phase: 'integration',
+                    file: resizedImage,
+                    labels: res?.data?.label.Labels
+                });
             });
+        })
+        .catch(error => {
+            console.error('Error resizing image:', error);
+            setIsLoad(false); 
         });
-        
     };
 
     return (

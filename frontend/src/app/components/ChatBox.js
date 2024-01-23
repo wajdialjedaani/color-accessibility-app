@@ -53,6 +53,7 @@ function Chatbox() {
             });
 
             const data = await response.json();
+
             setContent((prevContent) => [
                 ...prevContent,
                 data.choices[0].message,
@@ -92,7 +93,7 @@ function Chatbox() {
         />
         
         <Button onClick={handleSubmit} variant="info">
-          <FontAwesomeIcon icon={faPaperPlane} size="l" />
+          <FontAwesomeIcon icon={faPaperPlane} size="lg" />
         </Button>
         <Button onClick={handleClear} variant="text">
           Clear
