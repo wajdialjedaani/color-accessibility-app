@@ -47,27 +47,34 @@ const Palette = () => {
   }, []); // Run only once when the component mounts
 
   return (
-    <div>
+    <div class="d-flex flex-column">
       <h1>Color Palette Generator</h1>
-      <div>
+      <div class="d-flex flex-row justify-content-between align-items-strech .flex-{grow|shrink}-1" style={{ minHeight: '400px' }} >
         {colors.map((color, index) => (
-          <div key={index} style={{ margin: '10px' }}> 
-            <div
+          <div class="d-flex flex-column justify-content-center align-items-center align-content-end" key={index} style={{ width: '100%', position: 'relative' }} >
+            <div class=".flex-{grow|shrink}-1 d-flex justify-content-strech align-items-center"
               style={{
                 backgroundColor: `rgb(${color.join(',')})`,
-                padding: '20px',
                 border: lockedColors[index] ? '2px solid #000' : 'none',
+                margin: '0',
+                width: '100%',
+                height: '150px'
               }}
             >
-              {color.join(', ')}
             </div>
-            <button onClick={() => handleLockColor(index)}>
+            <label>{color.join(',')}</label>
+            <button type="button" class="btn btn-secondary" onClick={() => handleLockColor(index)}>
               {lockedColors[index] ? 'Unlock' : 'Lock'}
             </button>
           </div>
         ))}
       </div>
-      <button onClick={handleGeneratePalette}>Generate Palette</button>
+      <div class="d-flex justify-content-center">
+      <div class="d-flex justify-content-around" style={{gap: '36px'}}>
+        <button class="btn btn-primary btn-lg" type="submit" onClick={handleGeneratePalette}>Generate Palette</button>
+        <button class="btn btn-primary btn-lg" type="submit">Download</button>
+      </div>
+      </div>
     </div>
   );
 };
