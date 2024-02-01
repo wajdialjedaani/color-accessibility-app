@@ -27,6 +27,21 @@ const Integration = ({ sendPhase, file, labels }) => {
         }
     };
 
+    const getColorIndex = (e) => {
+        const imageElement = imageRef.current;
+        const rect = imageElement?.getBoundingClientRect();
+
+        const xRatio = (e.clientX - rect.left) / imageElement.width;
+        const yRatio = (e.clientY - rect.top) / imageElement.height;
+
+        const x = Math.floor(xRatio * imageElement.naturalWidth);
+        const y = Math.floor(yRatio * imageElement.naturalHeight);
+
+        const index = labels[y * imageElement.naturalWidth + x];
+
+        return index;
+    }
+
     const handleImageClick = (e) => {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
@@ -35,11 +50,12 @@ const Integration = ({ sendPhase, file, labels }) => {
 
         canvas.width = imageRef.current.width;
         canvas.height = imageRef.current.height;
+
         ctx.drawImage(imageRef.current, 0, 0, canvas.width, canvas.height);
 
         const pixelData = ctx.getImageData(x, y, 1, 1).data;
 
-        const colorIndex = labels[y * canvas.width + x];
+        const colorIndex = getColorIndex(e);
 
         findColorName(pixelData, color_dict[colorIndex]);
     };
@@ -52,8 +68,8 @@ const Integration = ({ sendPhase, file, labels }) => {
                 src={URL.createObjectURL(file)} 
                 ref={imageRef}
                 alt="Image"
+                fluid
                 onClick={handleImageClick}
-                fluid 
                 style={{maxHeight: "50rem"}}/>
             </div>
         </div>

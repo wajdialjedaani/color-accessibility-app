@@ -41,10 +41,12 @@ export default function Landing({ sendPhase }) {
     };
 
     const chooseImageScale = (w, h) => {
-        if (w*h <= 300000) return 1;
-      const scale = Math.sqrt(300000 / ( w*h));
-      console.log(scale);
-      return scale;
+        console.log('frontend:', w*h)
+    //     if (w*h <= 300000) return 1;
+    //   const scale = Math.sqrt(300000 / ( w*h));
+    //   console.log(scale);
+    //   return scale;
+    return 1;
     }
 
     const handleUpload = () => {

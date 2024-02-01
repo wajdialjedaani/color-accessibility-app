@@ -25,7 +25,6 @@ class FileUpload(models.Model):
             img = Image.open(self.image)
 
             img_array = np.array(img)
-            dimensions = (299, 299, 299)
             # resized_array = np.resize(img_array, dimensions)
             resized_array = img_array
 
