@@ -1,68 +1,45 @@
 // frontend/src/components/Palette.js
 import React, { useState, useEffect } from 'react';
+import { generatePalette } from '../api/palette/route';
 
 const Palette = () => {
   const [colors, setColors] = useState([]);
-  const [lockedColors, setLockedColors] = useState(Array(5).fill(false));
-
-  function generateRandomColor() {
-    return [
-      Math.floor(Math.random() * 256),
-      Math.floor(Math.random() * 256),
-      Math.floor(Math.random() * 256),
-    ];
-  }
-
-  function generateRandomPalette() {
-    const palette = [];
-    for (let i = 0; i < 5; i++) {
-      palette.push(generateRandomColor());
-    }
-    return palette;
-  }
 
   const handleGeneratePalette = () => {
-    const newPalette = colors.map((color, index) => {
-      return lockedColors[index] ? color : generateRandomColor();
-    });
-    setColors(newPalette);
+    generatePalette((palette) => {
+      setColors(palette);
+    }, colors);
   };
 
   const handleLockColor = (index) => {
-    const updatedLockedColors = [...lockedColors];
-    updatedLockedColors[index] = !updatedLockedColors[index];
-    setLockedColors(updatedLockedColors);
+    const palette = [...colors];
+    palette[index].isLocked = !palette[index].isLocked;
+
+    setColors(palette);
   };
 
   useEffect(() => {
-    // Generate the initial palette on the client side
-    if (colors.length === 0 && typeof window !== 'undefined') {
-      setColors(generateRandomPalette());
+    if (colors?.length === 0 && typeof window !== 'undefined') {
+      handleGeneratePalette();
     }
   }, [colors]);
-
-  useEffect(() => {
-    // Ensure hydration is triggered after the initial render
-    handleGeneratePalette();
-  }, []); // Run only once when the component mounts
-
   return (
     <div>
       <h1>Color Palette Generator</h1>
       <div>
-        {colors.map((color, index) => (
+        {colors?.map((color, index) => (
           <div key={index} style={{ margin: '10px' }}> 
             <div
               style={{
-                backgroundColor: `rgb(${color.join(',')})`,
+                backgroundColor: `rgb(${color.rgb.join(',')})`,
                 padding: '20px',
-                border: lockedColors[index] ? '2px solid #000' : 'none',
+                border: color.isLocked ? '2px solid #000' : 'none',
               }}
             >
-              {color.join(', ')}
+              {color.rgb.join(', ')}
             </div>
             <button onClick={() => handleLockColor(index)}>
-              {lockedColors[index] ? 'Unlock' : 'Lock'}
+              {color.isLocked ? 'Unlock' : 'Lock'}
             </button>
           </div>
         ))}
