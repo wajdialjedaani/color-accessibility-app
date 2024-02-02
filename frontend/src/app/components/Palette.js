@@ -1,7 +1,8 @@
 // frontend/src/components/Palette.js
 import React, { useState, useEffect } from "react";
 import { generatePalette } from "../api/palette/route";
-import { FaCopy, FaLockOpen, FaLock } from "react-icons/fa";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLock, faLockOpen, faCopy } from "@fortawesome/free-solid-svg-icons";
 
 const Palette = () => {
   const [colors, setColors] = useState([]);
@@ -69,7 +70,11 @@ const Palette = () => {
                 className="btn"
                 onClick={() => handleLockColor(index)}
               >
-                {color.isLocked ? <FaLockOpen /> : <FaLock />}
+                {color.isLocked ? (
+                  <FontAwesomeIcon icon={faLockOpen} />
+                ) : (
+                  <FontAwesomeIcon icon={faLock} />
+                )}
               </button>
               <button
                 type="button"
@@ -80,7 +85,7 @@ const Palette = () => {
                   )
                 }
               >
-                <FaCopy />
+                <FontAwesomeIcon icon={faCopy} />{" "}
               </button>
             </div>
           </div>
