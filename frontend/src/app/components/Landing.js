@@ -3,6 +3,7 @@
 import { Button, Form, Spinner } from 'react-bootstrap';
 import React, { useState } from 'react';
 import { uploadImage } from '../api/image/route'
+import { findSignificantColors } from '../api/palette/findSignificantColors';
 
 export default function Landing({ sendPhase }) {
     const [image, setImage] = useState(null);
@@ -71,6 +72,8 @@ export default function Landing({ sendPhase }) {
                     file: resizedImage,
                     labels: res?.data?.label.Labels
                 });
+
+                findSignificantColors(formData);
             });
         })
         .catch(error => {
