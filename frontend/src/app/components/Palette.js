@@ -70,7 +70,7 @@ const Palette = () => {
                 className="btn"
                 onClick={() => handleLockColor(index)}
               >
-                {color.isLocked ? (
+                {!color.isLocked ? (
                   <FontAwesomeIcon icon={faLockOpen} />
                 ) : (
                   <FontAwesomeIcon icon={faLock} />
