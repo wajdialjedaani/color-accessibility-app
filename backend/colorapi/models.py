@@ -49,3 +49,32 @@ class FileUpload(models.Model):
             print('Color recognition failed:', e)
 
         return super().save(*args, **kwargs)
+    
+
+    
+    def find_significant_colors(self, num_colors=5):
+        try:
+            img = Image.open(self.image)
+
+            img_array = np.array(img)
+
+            reshaped_array = img_array.reshape((-1, 3))
+
+            rgb_values = [tuple(rgb) for rgb in reshaped_array]
+
+            color_counts = dict()
+
+            for rgb_value in rgb_values:
+                color_counts[rgb_value] = color_counts.get(rgb_value, 0) + 1
+
+            sorted_colors = sorted(color_counts.items(), key=lambda x: x[1], reverse=True)
+            significant_colors = [np.array(color[0]) for color in sorted_colors[:num_colors]]
+
+            significant_colors_json = pd.DataFrame(significant_colors, columns=['red', 'green', 'blue']).to_json()
+
+            self.label = significant_colors_json
+
+        except Exception as e:
+            print('Error finding significant colors:', e)
+
+        super().save()
