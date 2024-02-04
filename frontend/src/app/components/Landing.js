@@ -58,22 +58,20 @@ export default function Landing({ sendPhase }) {
         }
 
         setIsLoad(true);
-        const formData = new FormData();
 
         resizeImageByScale(image)
             .then(resizedImage => {
-                formData.append('image', resizedImage)
+                setImage(resizedImage)
 
-                uploadImage(formData).then(res => {
-                console.log(res.data);
+                uploadImage(resizedImage).then(res => {
                 setIsLoad(false);
                 sendPhase({
                     phase: 'integration',
                     file: resizedImage,
-                    labels: res?.data?.label.Labels
+                    labels: res?.data?.label
                 });
 
-                findSignificantColors(formData);
+                findSignificantColors(resizedImage);
             });
         })
         .catch(error => {

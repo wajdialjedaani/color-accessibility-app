@@ -1,19 +1,15 @@
 import axios from 'axios'
 import { baseUrl } from '../../constants';
-export async function findSignificantColors (formData) {
-    return await axios.post(`${baseUrl}files/find_significant_colors`, formData, {
+export async function findSignificantColors (image) {
+    return await axios.post(`${baseUrl}significant_colors/`, image, {
             headers: {
             accept: 'application/json',
             'content-type': 'multipart/form-data'
         },
     })
     .then(async (response) => {
-        console.log(response)
-        // const parsedLabel = await JSON.parse(response.data.label); 
-    
-        // response.data.label = parsedLabel;
-        
-        // return response;
+        console.log(response.data.palette)
+        return response.data.palette
     })
     .catch((err) => console.log(err));
 }

@@ -1,11 +1,7 @@
-from django.urls import path, include
-from rest_framework import routers
-from .views import FileUploadView, FindSignificantColors
-
-router = routers.DefaultRouter()
-router.register(r'files', FileUploadView)
+from django.urls import path
+from .views import ColorRecognitionAPI, SignificantColorsAPI
 
 urlpatterns = [
-    path('', include(router.urls)),
-    path('find_significant_colors/', FindSignificantColors, name='find_significant_colors')
+    path('color-recognition/', ColorRecognitionAPI.as_view(), name='color_recognition'),
+    path('significant_colors/', SignificantColorsAPI.as_view(), name='significant_colors')
 ]
