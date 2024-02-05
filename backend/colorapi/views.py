@@ -1,18 +1,14 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, renderers
-from django.http import JsonResponse
 from PIL import Image
 import numpy as np
-import os
 import joblib
 import pandas as pd
 from .apps import ColorapiConfig
 import base64
 from io import BytesIO
 from PIL import Image, ImageOps
-from django.http import StreamingHttpResponse
-from wsgiref.util import FileWrapper
 
 class ColorRecognitionAPI(APIView):
     def post(self, request):
@@ -139,7 +135,6 @@ class SimulationAPI(APIView):
                         
                     # Choose a color matrix based on the type of colorblindness
                     color_matrix = self.colorMats.get(simulationType)
-                    #simulationType = 'Tritanopia'
 
                     # Update RGB values
                     new_red, new_green, new_blue = self.simulate_colorblindness(red, green, blue, color_matrix)
@@ -151,12 +146,8 @@ class SimulationAPI(APIView):
                 
                 modified_img_array = np.stack([red_channel, green_channel, blue_channel], axis=-1)
                 modified_img = Image.fromarray(modified_img_array)
-                # # Convert the modified image to a base64-encoded string
-                # buffered = BytesIO()
-                # modified_img.save(buffered, format="PNG")
-                # img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
+
                 compressed_buffer = BytesIO()
-                modified_img = Image.fromarray(modified_img_array)
 
                 # Resize the image to a reasonable size
                 modified_img = ImageOps.exif_transpose(modified_img)
