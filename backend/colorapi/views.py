@@ -7,6 +7,7 @@ import numpy as np
 import os
 import joblib
 import pandas as pd
+from sklearn.cluster import KMeans
 
 class ColorRecognitionAPI(APIView):
     def post(self, request):
@@ -53,17 +54,13 @@ class SignificantColorsAPI(APIView):
             img_array = np.array(img)
             reshaped_array = img_array.reshape((-1, 3))
 
-            rgb_values = [tuple(rgb) for rgb in reshaped_array]
+            # Perform k-means clustering to find dominant colors
+            num_colors = 5  # You can adjust this based on the number of colors you want in the palette
+            kmeans = KMeans(n_clusters=num_colors, random_state=42)
+            kmeans.fit(reshaped_array)
+            dominant_colors = kmeans.cluster_centers_.astype(int)
 
-            color_counts = dict()
-
-            for rgb_value in rgb_values:
-                color_counts[rgb_value] = color_counts.get(rgb_value, 0) + 1
-
-            sorted_colors = sorted(color_counts.items(), key=lambda x: x[1], reverse=True)
-            significant_colors = [list(color[0]) for color in sorted_colors[:5]]
-
-            return Response({'palette': significant_colors}, status=status.HTTP_200_OK)
+            return Response({'palette': dominant_colors.tolist()}, status=status.HTTP_200_OK)
 
         except Exception as e:
             return Response({'error': f'Color recognition failed: {e}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

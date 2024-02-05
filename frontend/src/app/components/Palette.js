@@ -1,6 +1,6 @@
 // frontend/src/components/Palette.js
 import React, { useState, useEffect } from "react";
-import { generatePalette } from "../api/palette/route";
+import { generatePalette } from "../api/palette/generatePalette";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock, faLockOpen, faCopy } from "@fortawesome/free-solid-svg-icons";
 
@@ -39,11 +39,11 @@ const Palette = () => {
     }
   }, [colors]);
   return (
-    <div className="d-flex flex-column" style={{ margin: "100px" }}>
-      <h1>Color Palette Generator</h1>
+    <div className="d-flex flex-column" style={{ margin: "1rem" }}>
+      <h2>Color Palette Generator</h2>
       <div
         className="d-flex flex-row justify-content-between align-items-strech .flex-{grow|shrink}-1"
-        style={{ minHeight: "400px" }}
+        style={{ minHeight: "200px" }}
       >
         {colors?.map((color, index) => (
           <div
