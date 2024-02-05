@@ -126,3 +126,5 @@ CORS_ALLOWED_ORIGINS = [
 CORS_ORIGIN_WHITELIST = [
      'http://localhost:3000'
 ]
+
+MODELS = os.path.join(BASE_DIR, 'colorapi/models')

@@ -1,19 +1,24 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, renderers
 from django.http import JsonResponse
 from PIL import Image
 import numpy as np
 import os
 import joblib
 import pandas as pd
+from .apps import ColorapiConfig
+import base64
+from io import BytesIO
+from PIL import Image, ImageOps
+from django.http import StreamingHttpResponse
+from wsgiref.util import FileWrapper
 
 class ColorRecognitionAPI(APIView):
     def post(self, request):
         try:
             # Load the color recognition model
-            model_path = os.path.join(os.path.dirname(__file__), 'models', 'color.pkl')
-            color_model = joblib.load(model_path)
+            color_model = ColorapiConfig.model 
 
             if not request:
                 return Response({'error': 'Image file is required.'}, status=status.HTTP_400_BAD_REQUEST)
@@ -65,5 +70,105 @@ class SignificantColorsAPI(APIView):
 
             return Response({'palette': significant_colors}, status=status.HTTP_200_OK)
 
+        except Exception as e:
+            return Response({'error': f'Color recognition failed: {e}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class ImageRenderer(renderers.BaseRenderer):
+    media_type = 'image/jpeg'
+    format = 'jpeg'
+    charset = None
+    render_style = 'binary'
+
+    def render(self, data, media_type=None, renderer_context=None):
+        return data
+    
+class SimulationAPI(APIView):
+
+    colorMats = {
+        # Red-Blind
+        'Protanopia':   
+        [0.567,0.433,0.000,
+        0.558,0.442,0.000,
+        0.000,0.242,0.758],
+        # Green-Blind
+        'Deuteranopia': 
+        [0.625,0.375,0.000,
+        0.700,0.300,0.000,
+        0.000,0.300,0.700],
+        # Blue-Blind
+        'Tritanopia':   
+        [0.950,0.050,0.000,
+        0.000,0.433,0.567,
+        0.000,0.475,0.525],
+        # Monochromacy
+        'Achromatopsia':
+        [0.299,0.587,0.114,
+        0.299,0.587,0.114,
+        0.299,0.587,0.114],
+        }
+    
+    def simulate_colorblindness(self, red, green, blue, color_matrix):
+
+        # Apply the protanomaly matrix to the original RGB values
+        new_rgb_values = np.dot(np.array(color_matrix).reshape((3,3)), [red, green, blue])
+
+        # Extract the simulated RGB values
+        new_red, new_green, new_blue = new_rgb_values
+
+        return new_red, new_green, new_blue
+    
+    def post(self, request):
+        try:
+            
+            simulationType = request.query_params.get('simulateType')
+            img = Image.open(request.FILES.get('image'))
+
+            img_array = np.array(img)
+
+            # Extract RGB values from the processed image
+            red_channel = img_array[:, :, 0]
+            green_channel = img_array[:, :, 1]
+            blue_channel = img_array[:, :, 2]
+
+            for i in range(img_array.shape[0]):
+                for j in range(img_array.shape[1]):
+                    # Get the original RGB values
+                    red = img_array[i, j, 0]
+                    green = img_array[i, j, 1]
+                    blue = img_array[i, j, 2]
+                        
+                    # Choose a color matrix based on the type of colorblindness
+                    color_matrix = self.colorMats.get(simulationType)
+                    #simulationType = 'Tritanopia'
+
+                    # Update RGB values
+                    new_red, new_green, new_blue = self.simulate_colorblindness(red, green, blue, color_matrix)
+
+                    # Update RGB values of the pixel
+                    img_array[i, j, 0] = new_red
+                    img_array[i, j, 1] = new_green
+                    img_array[i, j, 2] = new_blue
+                
+                modified_img_array = np.stack([red_channel, green_channel, blue_channel], axis=-1)
+                modified_img = Image.fromarray(modified_img_array)
+                # # Convert the modified image to a base64-encoded string
+                # buffered = BytesIO()
+                # modified_img.save(buffered, format="PNG")
+                # img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
+                compressed_buffer = BytesIO()
+                modified_img = Image.fromarray(modified_img_array)
+
+                # Resize the image to a reasonable size
+                modified_img = ImageOps.exif_transpose(modified_img)
+                modified_img.thumbnail((800, 800))
+
+                # Save the compressed image to the buffer
+                modified_img.save(compressed_buffer, format="JPEG", quality=85)
+
+                # Get the base64-encoded string of the compressed image
+                img_str = base64.b64encode(compressed_buffer.getvalue()).decode("utf-8")
+
+            return Response({'simulationType': simulationType, 'modifiedImage': img_str}, status=status.HTTP_200_OK)
+        
         except Exception as e:
             return Response({'error': f'Color recognition failed: {e}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
