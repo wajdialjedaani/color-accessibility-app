@@ -1,9 +1,10 @@
 'use client';
 
-import { Button, Form, Spinner } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import React, { useState } from 'react';
 import { uploadImage } from '../api/image/route'
 import { findSignificantColors } from '../api/palette/findSignificantColors';
+import { LoadingState } from './LoadingState';
 
 export default function Landing({ sendPhase }) {
     const [image, setImage] = useState(null);
@@ -70,8 +71,6 @@ export default function Landing({ sendPhase }) {
                     file: resizedImage,
                     labels: res?.data?.label
                 });
-
-                findSignificantColors(resizedImage);
             });
         })
         .catch(error => {
@@ -99,33 +98,7 @@ export default function Landing({ sendPhase }) {
 
             <div style={{ position: 'relative' }}>
             {isLoad && (
-                <div
-                    style={{
-                        position: 'fixed',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        height: '100%',
-                        backgroundColor: 'rgba(0, 0, 0, 0.5)', 
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        zIndex: 9999, 
-                    }}
-                >
-                    <div
-                        style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            gap: '1rem',
-                            color: 'white',
-                        }}
-                    >
-                        <Spinner animation="border" variant="light" />
-                        <span>Analyzing your image. Please hold on for a moment.</span>
-                    </div>
-                </div>
+                <LoadingState />
             )}
         </div>
         </div>
