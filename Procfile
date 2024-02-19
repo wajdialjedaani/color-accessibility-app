@@ -1,1 +1,1 @@
-web: gunicorn color-accessibility.wsgi
+web: gunicorn backend.wsgi
