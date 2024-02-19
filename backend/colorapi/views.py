@@ -3,7 +3,6 @@ from rest_framework.response import Response
 from rest_framework import status, renderers
 from PIL import Image
 import numpy as np
-import joblib
 import pandas as pd
 from sklearn.cluster import KMeans
 from .apps import ColorapiConfig
