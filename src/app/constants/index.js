@@ -1,4 +1,5 @@
-const baseUrl = "http://localhost:8000/api/"
+// const baseUrl = "http://localhost:8000/api/"
+const baseUrl = "https://color-accessibility-c26550ebbc98.herokuapp.com/api/"
 
 const color_dict = {
     0: 'Red',
