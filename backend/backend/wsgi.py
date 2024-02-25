@@ -11,8 +11,13 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 from whitenoise import WhiteNoise
+import sys
+from settings import BASE_DIR
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
+
+folder_path =  os.path.join(BASE_DIR, 'backend')
+sys.path.append(folder_path)
 
 application = get_wsgi_application()
 application = WhiteNoise(application)
