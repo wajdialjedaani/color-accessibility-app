@@ -20,5 +20,9 @@
     "react-bootstrap": "^2.9.0",
     "react-dom": "^18",
     "react-icons": "^5.0.1"
+  },
+  "engines": {
+    "node": "20.8.0",
+    "npm": "8.19.4"
   }
 }

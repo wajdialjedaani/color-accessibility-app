@@ -1,5 +1,8 @@
 import axios from 'axios'
 import { baseUrl } from '../../constants';
+
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 export async function uploadImage (image) {
     return await axios.post(`${baseUrl}color-recognition/`, image, {
             headers: {
