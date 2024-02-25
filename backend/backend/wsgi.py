@@ -23,6 +23,6 @@ sys.path.append(your_project_path)
 sys.path.append(os.path.join(your_project_path, 'backend'))  
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
-ç
+
 application = get_wsgi_application()
 application = WhiteNoise(application)
