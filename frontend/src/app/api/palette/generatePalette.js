@@ -1,5 +1,5 @@
 export const generatePalette = (fn, colors) => {
-    const url = "http://colormind.io/api/";
+    const url = "https://colormind.io/api/";
     const data = {
       model: "default",
       input: colors?.length === 0 ? undefined : colors.map(i => i.isLocked ? i.rgb : "N")
