@@ -70,6 +70,7 @@ const Page = () => {
       id: 1,
       title: "Color Palette",
       backgroundColor: "#E0835A",
+      route: 'palette',
       description:
         " Let your creativity flourish. Our Color Palette Generator empowers you to craft captivating color schemes that are accessible to everyone. Achieve harmony and inclusivity in your designs effortlessly.",
     },
@@ -77,6 +78,7 @@ const Page = () => {
       id: 2,
       title: "Color Recognition",
       backgroundColor: "#7a765e",
+      route: 'recognition',
       description:
         "Decode the colors around you. Our Color Recognition feature identifies and labels colors in real-time, making the world more accessible for those with visual impairments. Experience the power of inclusive design at your fingertips.",
     },
@@ -84,6 +86,7 @@ const Page = () => {
       id: 3,
       title: "Color Simulator",
       backgroundColor: "#39545B",
+      route: 'simulator',
       description:
         "Step into another perspective. Our Color Simulator offers a unique glimpse into the world of color-blindness. Experience popular color-blindness types realistically, allowing you to design with empathy and understanding.",
     },
@@ -109,8 +112,8 @@ const Page = () => {
             <FeatureItem >
               <CTAButton
                 backgroundColor={feature.backgroundColor}
-                href="/pages/palette"
-              >
+                href={`/pages/${feature.route}`}
+                >
                 {feature.title}
               </CTAButton>
               <p style={{ fontSize: "15px", color: "#6c6768" }}>
