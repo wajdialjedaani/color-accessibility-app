@@ -127,9 +127,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
+    'https://colorapp-frontend-b1274e2325e0.herokuapp.com'
 ]
 CORS_ORIGIN_WHITELIST = [
-     'http://localhost:3000'
+     'http://localhost:3000',
+     'https://colorapp-frontend-b1274e2325e0.herokuapp.com'
 ]
 
 MODELS = os.path.join(BASE_DIR, 'colorapi/models')
