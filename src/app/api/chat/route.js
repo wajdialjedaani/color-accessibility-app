@@ -1,21 +1,21 @@
-import { Configuration, OpenAIApi } from "openai";
-const configuration = new Configuration({
-    organization: "org-ynEYrdDkdRGouaITKiJc2lcw",
-    apiKey: process.env.OPENAI_API_KEY,
-});
+// import { Configuration, OpenAIApi } from "openai";
+// const configuration = new Configuration({
+//     organization: "org-ynEYrdDkdRGouaITKiJc2lcw",
+//     apiKey: process.env.OPENAI_API_KEY,
+// });
 
-const openai = new OpenAIApi(configuration);
+// const openai = new OpenAIApi(configuration);
 
-export async function POST(req) {
-    const body = req.body;
-    const completion = await openai.chat.completion.create({
-        model: body.model,
-        messages: body.messages
-    });
+// export async function POST(req) {
+//     const body = req.body;
+//     const completion = await openai.chat.completion.create({
+//         model: body.model,
+//         messages: body.messages
+//     });
     
-    return completion;
+//     return completion;
 
-}
+// }
 
 
 
