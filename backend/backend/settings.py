@@ -26,7 +26,11 @@ SECRET_KEY = 'django-insecure-ir280m0c+!8%mma85k)pah(x0vomg9-%$yk36iyyra71^s*vv5
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
 
-ALLOWED_HOSTS = ['color-accessibility-c26550ebbc98.herokuapp.com', 'colorapp-frontend-b1274e2325e0.herokuapp.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = [
+    'color-accessibility-c26550ebbc98.herokuapp.com', 
+    'truehue-61186f1da362.herokuapp.com', 
+    'localhost', 
+    '127.0.0.1']
 
 
 # Application definition
@@ -127,11 +131,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
-    'https://colorapp-frontend-b1274e2325e0.herokuapp.com'
+    'https://truehue-61186f1da362.herokuapp.com'
 ]
 CORS_ORIGIN_WHITELIST = [
      'http://localhost:3000',
-     'https://colorapp-frontend-b1274e2325e0.herokuapp.com'
+     'https://truehue-61186f1da362.herokuapp.com'
 ]
 
 MODELS = os.path.join(BASE_DIR, 'colorapi/models')
