@@ -7,6 +7,7 @@ export default function Page() {
     <div>
     <Palette />
     <ImagePalette />
+
     </div>
   )
 }
