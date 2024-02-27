@@ -8,7 +8,6 @@ https://docs.djangoproject.com/en/4.2/howto/deployment/wsgi/
 """
 
 from django.core.wsgi import get_wsgi_application
-from whitenoise import WhiteNoise
 import sys
 import os
 

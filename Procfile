@@ -1,1 +1,1 @@
-web: npm run start
+web: gunicorn --pythonpath backend backend.wsgi

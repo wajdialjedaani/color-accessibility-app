@@ -9,6 +9,8 @@ from .apps import ColorapiConfig
 import base64
 from io import BytesIO
 from PIL import Image, ImageOps
+import requests
+from django.http import JsonResponse
 
 class ColorRecognitionAPI(APIView):
     def post(self, request):

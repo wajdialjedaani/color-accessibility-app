@@ -138,4 +138,5 @@ CORS_ORIGIN_WHITELIST = [
      'https://truehue-61186f1da362.herokuapp.com'
 ]
 
+
 MODELS = os.path.join(BASE_DIR, 'colorapi/models')
