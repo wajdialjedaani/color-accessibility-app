@@ -49,6 +49,7 @@ const ImagePalette = () => {
   };
 
   return (
+    <div style={{margin: '0px 20px'}}>
     <div className="d-flex flex-column" style={{ margin: "1rem" }}>
       <h2>Color Palette from Image</h2>
       <h5 style={{margin: "20px 0px"}}>Elevate Your Creativity in 3 Simple Steps:</h5>
@@ -129,8 +130,9 @@ const ImagePalette = () => {
             </div>
           ) : ""}{" "}
           </div>
-    </div>
+    </div></div>
   );
+  
 };
 
 export default ImagePalette;
