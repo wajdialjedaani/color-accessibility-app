@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCopy } from "@fortawesome/free-solid-svg-icons";
 import { LoadingState } from "./LoadingState";
 import { findSignificantColors } from "../api/palette/findSignificantColors";
+import SimulatorForm from "./SimulatorForm";
 
 const ImagePalette = () => {
   const [colors, setColors] = useState([{ rgb: [256, 256, 256] }]);
@@ -50,11 +51,39 @@ const ImagePalette = () => {
   return (
     <div className="d-flex flex-column" style={{ margin: "1rem" }}>
       <h2>Color Palette from Image</h2>
-      <div
-        className="d-flex flex-row justify-content-between align-items-strech .flex-{grow|shrink}-1"
-        style={{ minHeight: "200px" }}
-      >
-        {colors?.map((color, index) => (
+      <h5>Elevate Your Creativity in 3 Simple Steps:</h5>
+      <ul>
+        <li>
+          Upload Image: Select any image—photo, graphic, or artwork—and upload
+          it with a click.
+        </li>
+
+        <li>
+          Wait a Moment: Our smart system analyzes your image, revealing the
+          five most significant colors.
+        </li>
+
+        <li>
+          Discover Your Palette: Instantly explore a curated color palette
+          inspired by your image. Ready to inspire your next project!
+        </li>
+      </ul>
+      <h5>Choose an Image</h5>
+
+      <div>
+        <input type="file" accept="image/*" onChange={handleChange} />
+      </div>
+      <div>
+        <Button style={{ backgroundColor: "#39545B" }} onClick={handleUpload}>
+          GENERATE
+        </Button>
+        <Button style={{ marginLeft: "1rem" }} onClick={handleClearImage}>
+          Clear
+        </Button>
+      </div>
+      <div className="d-flex flex-row justify-content-between align-items-strech .flex-{grow|shrink}-1"
+         style={{ minHeight: "200px" }}>
+      {colors?.map((color, index) => (
           <div
             className="d-flex flex-column justify-content-center align-items-center align-content-end"
             key={index}
@@ -87,19 +116,9 @@ const ImagePalette = () => {
               </button>
             </div>
           </div>
-        ))}
-      </div>
-      <div>
-        <Button style={{ backgroundColor: "#39545B" }} onClick={handleUpload}>
-          GENERATE
-        </Button>
-        <Button style={{ marginLeft: "1rem" }} onClick={handleClearImage}>
-          Clear
-        </Button>
-        <div style={{ position: "relative" }}>{isLoad && <LoadingState />}</div>
-        <div className="box d-flex flex-row">
-          {image ? (
-            <div className="box d-flex flex-row" style={{ height: "20rem" }}>
+        ))}</div>
+        <div> {image ? (
+            <div >
               <Image
                 src={URL.createObjectURL(image)}
                 alt="Image"
@@ -107,16 +126,8 @@ const ImagePalette = () => {
                 style={{ maxHeight: "20rem" }}
               />
             </div>
-          ) : (
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleChange}
-              style={{ width: "100%" }}
-            />
-          )}{" "}
-        </div>
-      </div>
+          ) : ""}{" "}
+          </div>
     </div>
   );
 };

@@ -14,16 +14,16 @@ const CTAButton = (props) => (
   <Button
     className="btn-lg"
     style={{
-      padding: "13px 25px",
+      padding: "20px 10px",
       fontWeight: 500,
-      fontSize: "1.3rem",
+      fontSize: "1.5rem",
       width: "300px",
       color: "#fff",
       border: "0px",
       borderRadius: "30px",
       boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.15)",
-      marginLeft: "60px",
-      marginRight: "60px",
+      marginLeft: "20px",
+      marginRight: "20px",
       backgroundColor: props.backgroundColor,
     }}
     href={props.href}
