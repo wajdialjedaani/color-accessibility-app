@@ -33,6 +33,7 @@ import { baseUrl } from "../../constants";
 
 export async function generatePalette(fn, colors) {
     const apiUrl = `${baseUrl}generate-palette/`;
+    console.log(baseUrl);
     try {
       const response = await axios.post(apiUrl, 
         {
