@@ -9,6 +9,43 @@ from .apps import ColorapiConfig
 import base64
 from io import BytesIO
 from PIL import Image, ImageOps
+import requests, json
+
+class GeneratePaletteAPI(APIView):
+    def post(self, request):
+        try:
+            url = "http://colormind.io/api/"
+            data = request.data
+
+            # model is the color model specified in the request data. 
+            # It defaults to 'default' if not provided.
+            # input_colors is a list of colors provided in the request data. 
+            # It defaults to an empty list if not provided.
+            model = data.get('model', 'default')
+            input_colors = data.get('input', [])
+
+            payload = {
+                'model': model,
+                'input': input_colors if input_colors else ["N"] * 5  # Replace 5 with your desired number of colors
+            }
+
+            response = requests.post(url, data=json.dumps(payload))
+
+            if response.status_code == 200:
+                result = response.json().get('result', [])
+                
+                palette = []
+                for idx, color in enumerate(result):
+                    if idx < len(input_colors) and input_colors[idx] != "N":
+                        palette.append({'rgb': input_colors[idx], 'isLocked': True})
+                    else:
+                        palette.append({'rgb': color, 'isLocked': False})
+
+                return Response({'palette': palette})
+            else:
+                return Response({'error': 'Failed to generate palette', 'status_code': response.status_code}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class ColorRecognitionAPI(APIView):
     def post(self, request):
