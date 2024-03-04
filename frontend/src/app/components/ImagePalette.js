@@ -51,7 +51,7 @@ const ImagePalette = () => {
   return (
     <div className="d-flex flex-column" style={{ margin: "1rem" }}>
       <h2>Color Palette from Image</h2>
-      <h5>Elevate Your Creativity in 3 Simple Steps:</h5>
+      <h5 style={{margin: "20px 0px"}}>Elevate Your Creativity in 3 Simple Steps:</h5>
       <ul>
         <li>
           Upload Image: Select any image—photo, graphic, or artwork—and upload
@@ -68,12 +68,12 @@ const ImagePalette = () => {
           inspired by your image. Ready to inspire your next project!
         </li>
       </ul>
+      <div style={{margin: "20px 0px"}}>
       <h5>Choose an Image</h5>
 
-      <div>
         <input type="file" accept="image/*" onChange={handleChange} />
       </div>
-      <div>
+      <div style={{marginBottom: "50px"}}>
         <Button style={{ backgroundColor: "#39545B" }} onClick={handleUpload}>
           GENERATE
         </Button>
@@ -118,12 +118,13 @@ const ImagePalette = () => {
           </div>
         ))}</div>
         <div> {image ? (
-            <div >
+            <div className="d-flex justify-content-center">
               <Image
+                className=".flex-{grow|shrink}-1"
                 src={URL.createObjectURL(image)}
                 alt="Image"
                 fluid
-                style={{ maxHeight: "20rem" }}
+                style={{ maxHeight: "40rem" }}
               />
             </div>
           ) : ""}{" "}
