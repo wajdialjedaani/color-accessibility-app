@@ -7,9 +7,8 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 export default function MainMenu() {
   const pathname = usePathname();
   let dropdownTitle = "Color Palette";
-  if (pathname === "/pages/palette") {
-    dropdownTitle = "Color Palette";
-  } else {
+  
+  if (pathname === "/pages/imagePalette") {
     dropdownTitle = "Palette from Image";
   }
 
