@@ -1,25 +1,31 @@
 // frontend/src/components/Palette.js
 import React, { useState } from "react";
-import { Button, Image } from "react-bootstrap";
+import { Button, Image, Spinner } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCopy } from "@fortawesome/free-solid-svg-icons";
 import { LoadingState } from "./LoadingState";
 import { findSignificantColors } from "../api/palette/findSignificantColors";
-import SimulatorForm from "./SimulatorForm";
 
 const ImagePalette = () => {
   const [colors, setColors] = useState([{ rgb: [256, 256, 256] }]);
   const [image, setImage] = useState(null);
   const [isLoad, setIsLoad] = useState(false);
+  const [fileChosen, setFileChosen] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
 
   const handleChange = (e) => {
     const file = e.target.files[0];
     setImage(file);
+    setFileChosen(true);
   };
 
   const handleUpload = () => {
+    if (!fileChosen) {
+      alert('Please choose a file before proceeding.');
+      return;
+  }
     setIsLoad(true);
-
+    setIsClicked(true);
     findSignificantColors(image).then((res) => {
       setIsLoad(false);
       setColors(
@@ -32,6 +38,7 @@ const ImagePalette = () => {
 
   const handleClearImage = () => {
     setImage(null);
+    setIsClicked(false);
     setColors([{ rgb: [256, 256, 256] }]);
   };
 
@@ -49,42 +56,97 @@ const ImagePalette = () => {
   };
 
   return (
-    <div style={{margin: '0px 20px'}}>
-    <div className="d-flex flex-column" style={{ margin: "1rem" }}>
-      <h2>Color Palette from Image</h2>
-      <h5 style={{margin: "20px 0px"}}>Elevate Your Creativity in 3 Simple Steps:</h5>
-      <ul>
-        <li>
-          Upload Image: Select any image—photo, graphic, or artwork—and upload
-          it with a click.
-        </li>
+    <div className="d-flex flex-column" style={{ margin: "2rem" }}>
+       <h3> Color Palette Generator From Image</h3>
+       <div style={{ marginTop: '1rem' }}>
+        <h5>Elevate your Creativity in 3 Simple Steps:</h5>
+        <ul>
+          <li>
+            Upload Image: Select any image—photo, graphic, or artwork—and upload
+            it with a click.
+          </li>
 
-        <li>
-          Wait a Moment: Our smart system analyzes your image, revealing the
-          five most significant colors.
-        </li>
+          <li>
+            Wait a Moment: Our smart system analyzes your image, revealing the
+            five most significant colors.
+          </li>
 
-        <li>
-          Discover Your Palette: Instantly explore a curated color palette
-          inspired by your image. Ready to inspire your next project!
-        </li>
-      </ul>
-      <div style={{margin: "20px 0px"}}>
-      <h5>Choose an Image</h5>
-
-        <input type="file" accept="image/*" onChange={handleChange} />
+          <li>
+            Discover Your Palette: Instantly explore a curated color palette
+            inspired by your image. Ready to inspire your next project!
+          </li>
+        </ul>
       </div>
-      <div style={{marginBottom: "50px"}}>
-        <Button style={{ backgroundColor: "#39545B" }} onClick={handleUpload}>
-          GENERATE
+      <div style={{ marginTop: '1rem'}}>
+        <h5>Choose an Image</h5>
+        <div>
+        <input
+            type="file"
+            accept="image/*"
+            onChange={handleChange}  
+        />
+        </div>
+        <Button
+        style={{ border: 'none', backgroundColor: '#39545B', margin: "1rem auto" }}
+        onClick={handleUpload}
+        >
+            GENERATE
         </Button>
-        <Button style={{ marginLeft: "1rem" }} onClick={handleClearImage}>
-          Clear
+        <Button
+            style={{
+                border: 'none',
+                backgroundColor: '#39545B',
+                margin: '1rem auto',
+                marginLeft: '0.5rem',
+            }}
+            onClick={handleClearImage}
+        >
+            RESET
         </Button>
+      </div>
+
+      {isLoad && (
+        <div
+            style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                backgroundColor: 'rgba(0, 0, 0, 0.5)', 
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                zIndex: 9999, 
+            }}
+        >
+            <div
+                style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '1rem',
+                    color: 'white',
+                }}
+            >
+                <Spinner animation="border" variant="light" />
+                <span>Processing...</span>
+            </div>
+        </div>
+    )}
+        {/* Palette Display */}
+      {image !== null && isClicked &&
+      <div>
+      <div className="d-flex justify-content-end">
+      <Button
+      style={{ padding: '5px 10px', borderColor: '#bab8b8', color: '#000000' ,backgroundColor: '#ffffff' }}
+    >
+      Download
+    </Button>
       </div>
       <div className="d-flex flex-row justify-content-between align-items-strech .flex-{grow|shrink}-1"
-         style={{ minHeight: "200px" }}>
-      {colors?.map((color, index) => (
+         style={{ minHeight: "200px", marginTop: "0.5rem" }}>
+        {colors?.map((color, index) => (
           <div
             className="d-flex flex-column justify-content-center align-items-center align-content-end"
             key={index}
@@ -117,8 +179,12 @@ const ImagePalette = () => {
               </button>
             </div>
           </div>
-        ))}</div>
-        <div> {image ? (
+          ))}
+        </div>
+        </div>
+        }
+        <div style={{marginTop: "1rem"}}> 
+          {image ? (
             <div className="d-flex justify-content-center">
               <Image
                 className=".flex-{grow|shrink}-1"
@@ -129,10 +195,9 @@ const ImagePalette = () => {
               />
             </div>
           ) : ""}{" "}
-          </div>
-    </div></div>
+        </div>
+    </div>
   );
-  
 };
 
 export default ImagePalette;
