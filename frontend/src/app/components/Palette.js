@@ -31,6 +31,27 @@ const Palette = () => {
     setFlag(false);
   }
 
+  const handleColorChange = (e, index) => {
+    const manualColors = [...colors];
+    const hex = e.target.value;
+    const rgb = hexToRgb(hex);
+    if (rgb) {
+      manualColors[index] = { rgb: [rgb.r, rgb.g, rgb.b], isLocked: false };
+      setColors(manualColors);
+    }
+  };
+  
+  const hexToRgb = (hex) => {
+    // Remove # symbol if present
+    hex = hex.replace(/^#/, '');
+    // Convert hex to RGB
+    const bigint = parseInt(hex, 16);
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = bigint & 255;
+    return { r, g, b };
+  };
+
   const rgbToHex = (red, green, blue) => {
     const toHex = (value) => {
       const hex = value.toString(16);
@@ -44,6 +65,11 @@ const Palette = () => {
     return `#${hexRed}${hexGreen}${hexBlue}`.toUpperCase();
   };
 
+  const getContrastRatio = (color) => {
+    const luminance = (color[0] * 0.299 + color[1] * 0.587 + color[2] * 0.114) / 255;
+    return luminance > 0.5 ? '#000000' : '#ffffff';
+  };
+
   useEffect(() => {
     if (colors?.length === 0 && typeof window !== "undefined") {
       handleGeneratePalette();
@@ -51,13 +77,15 @@ const Palette = () => {
   }, [colors]);
 
   return (
-    <div className="d-flex flex-column">
+    <div style={{marginBottom: '3rem'}} className="d-flex flex-column">
           {/* Header and Description */}
       <div style={{margin: '2rem'}}>
         <h3> Color Palette Generator</h3>
         <p>
           Welcome to our Color Palette Generator—a hub for unleashing your creative vision! 
-          Craft unique color schemes effortlessly with our user-friendly tool. 
+          Craft unique color schemes effortlessly with our user-friendly tool. <br></br><br></br>
+          <b>Simply generate a random palette or choose a color by selecting a color from the picker and click the lock icon to toggle locking the color. 
+          Click the copy icon to copy the hex code.</b>
         </p>
         <div style={{ marginTop: '0.2rem' }}>
         <h5>Colorblind Perspective</h5>
@@ -66,6 +94,12 @@ const Palette = () => {
           Select a colorblindness type and click "GENERATE" to generate a palette 
           that caters to the unique vision of individuals with color vision deficiencies.
           The second palette depicts how a colorblind individual would see. Choose <b>None</b> for random palette.
+        </p>
+        <h5 style={{marginTop: '1rem'}}>Understanding Contrast for Readability</h5>
+        <p>
+        The contrast between text and background colors significantly influences readability, particularly for users with visual impairments. 
+        Our generator automatically determines whether 
+        to display text in black or white based on the contrast between the background and text colors.
         </p>
       </div>
           {/* Choose Type and Generate */}
@@ -110,23 +144,43 @@ const Palette = () => {
             style={{ width: "100%", position: "relative" }}
           >
             <div
-              className=".flex-{grow|shrink}-1 d-flex justify-content-strech align-items-center"
+              className=".flex-{grow|shrink}-1 d-flex flex-column justify-content-strech align-items-center"
               style={{
                 backgroundColor: `rgb(${color.rgb.join(",")})`,
                 border: color.isLocked ? "2px solid #000" : "none",
                 margin: "0",
                 width: "100%",
                 height: "150px",
+                textAlign: "center",
+                color: getContrastRatio(color.rgb),
               }}
-            ></div>
-            <div>
-              <label style={{ paddingTop: "10px" }}>
+            >
+              <span style={{ marginTop: '7rem', fontSize: '12px' }}>Contrast <br></br>
+                <span style={{ borderTop: '1px solid', fontSize: '12px' }}>{getContrastRatio(color.rgb) === '#000000' ? 'Black Text' : 'White Text'}</span>
+              </span>
+            </div>
+            <div style={{marginTop: '10px'}} className="d-flex justify-content-center align-items-center">
+              {/* <input 
+                style={{ width: "65%", marginRight: "30px" }} 
+                className="form-control" 
+                type="color"
+                value={rgbToHex(color.rgb[0], color.rgb[1], color.rgb[2])} 
+                onChange={(e) => handleColorChange(e, index)} 
+              /> */}
+              <input 
+                style={{ marginRight: "10px" }} 
+                type="color" 
+                class="m-auto form-control form-control-color"  
+                value={rgbToHex(color.rgb[0], color.rgb[1], color.rgb[2])} 
+                onChange={(e) => handleColorChange(e, index)}/> 
+              <label style={{ paddingLeft: "8px" }}>
                 {rgbToHex(color.rgb[0], color.rgb[1], color.rgb[2])}
               </label>
               <button
                 type="button"
                 className="btn"
                 onClick={() => handleLockColor(index)}
+                style={{ marginRight: "10px" }}
               >
                 {!color.isLocked ? (
                   <FontAwesomeIcon icon={faLockOpen} />
@@ -137,6 +191,7 @@ const Palette = () => {
               <button
                 type="button"
                 className="btn"
+                style={{marginRight: "30px", marginLeft: "-20px"}}
                 onClick={() =>
                   navigator.clipboard.writeText(
                     `${rgbToHex(color.rgb[0], color.rgb[1], color.rgb[2])}`
@@ -161,7 +216,7 @@ const Palette = () => {
         </div>
       <div
         className="d-flex flex-row justify-content-between align-items-strech .flex-{grow|shrink}-1"
-        style={{ minHeight: "200px", margin: "0.5rem 2rem" }}
+        style={{ minHeight: "200px", margin: "0.3rem 2rem" }}
       > 
         {newColors?.map((color, index) => (
           <div
@@ -170,15 +225,21 @@ const Palette = () => {
             style={{ width: "100%", position: "relative" }}
           >
             <div
-              className=".flex-{grow|shrink}-1 d-flex justify-content-strech align-items-center"
+              className=".flex-{grow|shrink}-1 d-flex flex-column justify-content-strech align-items-center"
               style={{
                 backgroundColor: `rgb(${color.rgb.join(",")})`,
                 border: color.isLocked ? "2px solid #000" : "none",
                 margin: "0",
                 width: "100%",
                 height: "150px",
+                textAlign: "center",
+                color: getContrastRatio(color.rgb),
               }}
-            ></div>
+            >
+              <span style={{ marginTop: '7rem', fontSize: '12px' }}>Contrast <br></br>
+                <span style={{ borderTop: '1px solid', fontSize: '12px' }}>{getContrastRatio(color.rgb) === '#000000' ? 'Black Text' : 'White Text'}</span>
+              </span>
+            </div>
             <div>
               <label style={{ paddingTop: "10px" }}>
                 {rgbToHex(color.rgb[0], color.rgb[1], color.rgb[2])}

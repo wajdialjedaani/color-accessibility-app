@@ -42,6 +42,11 @@ const ImagePalette = () => {
     setColors([{ rgb: [256, 256, 256] }]);
   };
 
+  const getContrastRatio = (color) => {
+    const luminance = (color[0] * 0.299 + color[1] * 0.587 + color[2] * 0.114) / 255;
+    return luminance > 0.5 ? '#000000' : '#ffffff';
+  };
+
   const rgbToHex = (red, green, blue) => {
     const toHex = (value) => {
       const hex = value.toString(16);
@@ -153,15 +158,21 @@ const ImagePalette = () => {
             style={{ width: "100%", position: "relative" }}
           >
             <div
-              className=".flex-{grow|shrink}-1 d-flex justify-content-strech align-items-center"
+              className=".flex-{grow|shrink}-1 d-flex flex-column justify-content-strech align-items-center"
               style={{
                 backgroundColor: `rgb(${color.rgb.join(",")})`,
                 border: color.isLocked ? "2px solid #000" : "none",
                 margin: "0",
                 width: "100%",
                 height: "150px",
+                textAlign: "center",
+                color: getContrastRatio(color.rgb),
               }}
-            ></div>
+            >
+              <span style={{ marginTop: '7rem', fontSize: '12px' }}>Contrast <br></br>
+                <span style={{ borderTop: '1px solid', fontSize: '12px' }}>{getContrastRatio(color.rgb) === '#000000' ? 'Black Text' : 'White Text'}</span>
+              </span>
+            </div>
             <div>
               <label style={{ paddingTop: "10px" }}>
                 {rgbToHex(color.rgb[0], color.rgb[1], color.rgb[2])}
