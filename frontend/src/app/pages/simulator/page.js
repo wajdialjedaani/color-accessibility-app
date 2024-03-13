@@ -1,6 +1,5 @@
 'use client';
 
-import { Button, Form, Spinner } from 'react-bootstrap';
 import React, { useState } from 'react';
 import { simulateImage } from '../../api/simulation/simulateImage';
 import SimulatorForm from '../../components/SimulatorForm';
@@ -73,7 +72,6 @@ export default function Simulator() {
         resizeImageByScale(image)
             .then(image => {
                 setImage(image);
-
 
                 simulateImage(image, simulateType).then(res => {
                   setIsLoad(false);

@@ -11,11 +11,49 @@ from io import BytesIO
 from PIL import Image, ImageOps
 import requests, json
 
+
 class GeneratePaletteAPI(APIView):
+    colorMats = {
+        '':
+        [1,1,1,
+         1,1,1,
+         1,1,1],
+        # Red-Blind
+        'Protanopia':   
+        [0.567,0.433,0.000,
+        0.558,0.442,0.000,
+        0.000,0.242,0.758],
+        # Green-Blind
+        'Deuteranopia': 
+        [0.625,0.375,0.000,
+        0.700,0.300,0.000,
+        0.000,0.300,0.700],
+        # Blue-Blind
+        'Tritanopia':   
+        [0.950,0.050,0.000,
+        0.000,0.433,0.567,
+        0.000,0.475,0.525],
+        # Monochromacy
+        'Achromatopsia':
+        [0.299,0.587,0.114,
+        0.299,0.587,0.114,
+        0.299,0.587,0.114],
+        }
+    
+    def apply_color_matrix(self, color, colorBlindnessType):
+        matrix = self.colorMats.get(colorBlindnessType)
+        r = round(color[0] * matrix[0] + color[1] * matrix[1] + color[2] * matrix[2])
+        g = round(color[0] * matrix[3] + color[1] * matrix[4] + color[2] * matrix[5])
+        b = round(color[0] * matrix[6] + color[1] * matrix[7] + color[2] * matrix[8])
+        return [r, g, b]
+
     def post(self, request):
         try:
             url = "http://colormind.io/api/"
             data = request.data
+            colorBlindnessType = request.query_params.get('colorType', None)
+            print(colorBlindnessType)
+
 
             # model is the color model specified in the request data. 
             # It defaults to 'default' if not provided.
@@ -35,13 +73,20 @@ class GeneratePaletteAPI(APIView):
                 result = response.json().get('result', [])
                 
                 palette = []
+                paletteWithType = []
+                
                 for idx, color in enumerate(result):
                     if idx < len(input_colors) and input_colors[idx] != "N":
+                        locked_color = self.apply_color_matrix(input_colors[idx], colorBlindnessType)
+                        paletteWithType.append({'rgb': locked_color, 'isLocked': True}) 
                         palette.append({'rgb': input_colors[idx], 'isLocked': True})
                     else:
+                        transformed_color = self.apply_color_matrix(color, colorBlindnessType)
                         palette.append({'rgb': color, 'isLocked': False})
+                        paletteWithType.append({'rgb': transformed_color, 'isLocked': False})
 
-                return Response({'palette': palette})
+
+                return Response({'palette': palette, 'paletteWithType': paletteWithType, 'colorType': colorBlindnessType}, status=status.HTTP_200_OK)
             else:
                 return Response({'error': 'Failed to generate palette', 'status_code': response.status_code}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except Exception as e:
@@ -101,15 +146,6 @@ class SignificantColorsAPI(APIView):
 
         except Exception as e:
             return Response({'error': f'Color recognition failed: {e}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-class ImageRenderer(renderers.BaseRenderer):
-    media_type = 'image/jpeg'
-    format = 'jpeg'
-    charset = None
-    render_style = 'binary'
-
-    def render(self, data, media_type=None, renderer_context=None):
-        return data
     
 class SimulationAPI(APIView):
 

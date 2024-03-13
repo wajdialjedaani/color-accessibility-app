@@ -31,24 +31,30 @@
 import axios from "axios";
 import { baseUrl } from "../../constants";
 
-export async function generatePalette(fn, colors) {
+export async function generatePalette(fn, colors, colorType) {
     const apiUrl = `${baseUrl}generate-palette/`;
-    console.log(baseUrl);
     try {
-      const response = await axios.post(apiUrl, 
+      const response = await axios.post(apiUrl,
         {
           input: colors.map((color) => (color.isLocked ? color.rgb : "N")),
       }, {
         headers: {
-          'Content-Type': 'application/json',
-        },
+          'content-type': 'application/json'
+      },
+        params: {
+          'colorType': colorType
+        }
       });
     
       if (response.status === 200) {
         const data = response.data;
         const palette = data.palette;
+        const newPalette = data.paletteWithType;
+        const paramType = data.colorType;
+        console.log(paramType);
         console.log(palette);
-        fn(palette);
+
+        fn(palette, newPalette);
       } else {
         console.error('Failed to fetch palette');
       }
