@@ -1,9 +1,10 @@
-// frontend/src/components/Palette.js
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { generatePalette } from "../api/palette/generatePalette";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock, faLockOpen, faCopy } from "@fortawesome/free-solid-svg-icons";
 import { Button, Form } from 'react-bootstrap';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 const Palette = () => {
   const [colors, setColors] = useState([]);
@@ -40,9 +41,32 @@ const Palette = () => {
       setColors(manualColors);
     }
   };
+
+  const handleDownload = () => {
+    const palette = document.getElementById('palette');
+
+    html2canvas(palette, {scale: 3})
+      .then((canvas) => {
+        const pdf = new jsPDF('l', 'px', [palette.offsetWidth * 2, palette.offsetHeight * 2]);
+        const imgData = canvas.toDataURL('image/jpeg', 1.0);
+        pdf.addImage(imgData, 'JPEG', 0, 0);
+        if (flag && colorType != '') {
+          pdf.addPage();
+          const newPalette = document.getElementById('newPalette');
+          html2canvas(newPalette, { scale: 3 })
+            .then((newCanvas) => {
+              const newImgData = newCanvas.toDataURL('image/jpeg', 1.0);
+              const pdfName = `palette_${colorType.toLowerCase()}.pdf`; 
+              pdf.addImage(newImgData, 'JPEG', 0, 0);
+              pdf.save(pdfName);
+            });
+        } else {
+          pdf.save('palette.pdf');
+        }
+      })
+  }
   
   const hexToRgb = (hex) => {
-    // Remove # symbol if present
     hex = hex.replace(/^#/, '');
     // Convert hex to RGB
     const bigint = parseInt(hex, 16);
@@ -85,7 +109,9 @@ const Palette = () => {
           Welcome to our Color Palette Generator—a hub for unleashing your creative vision! 
           Craft unique color schemes effortlessly with our user-friendly tool. <br></br><br></br>
           <b>Simply generate a random palette or choose a color by selecting a color from the picker and click the lock icon to toggle locking the color. 
-          Click the copy icon to copy the hex code.</b>
+          Click the copy icon to copy the hex code.
+          <br></br>
+          Additionally, there's an option to export your favourite palette to a PDF for future reference.</b>
         </p>
         <div style={{ marginTop: '0.2rem' }}>
         <h5>Colorblind Perspective</h5>
@@ -129,6 +155,7 @@ const Palette = () => {
         <div className="d-flex justify-content-end">
       <Button
         style={{ padding: '5px 10px', borderColor: '#bab8b8', color: '#000000' ,backgroundColor: '#ffffff', margin: "0.5rem 2rem" }}
+        onClick={handleDownload}      
       >
         Download
       </Button>
@@ -136,6 +163,7 @@ const Palette = () => {
       <div
         className="d-flex flex-row justify-content-between align-items-strech .flex-{grow|shrink}-1"
         style={{ minHeight: "200px", margin: "0.1rem 2rem" }}
+        id="palette"
       >
         {colors?.map((color, index) => (
           <div
@@ -160,17 +188,10 @@ const Palette = () => {
               </span>
             </div>
             <div style={{marginTop: '10px'}} className="d-flex justify-content-center align-items-center">
-              {/* <input 
-                style={{ width: "65%", marginRight: "30px" }} 
-                className="form-control" 
-                type="color"
-                value={rgbToHex(color.rgb[0], color.rgb[1], color.rgb[2])} 
-                onChange={(e) => handleColorChange(e, index)} 
-              /> */}
               <input 
                 style={{ marginRight: "10px" }} 
                 type="color" 
-                class="m-auto form-control form-control-color"  
+                className="m-auto form-control form-control-color"  
                 value={rgbToHex(color.rgb[0], color.rgb[1], color.rgb[2])} 
                 onChange={(e) => handleColorChange(e, index)}/> 
               <label style={{ paddingLeft: "8px" }}>
@@ -207,16 +228,17 @@ const Palette = () => {
         {/* Colorblind Palette Display */}
       {flag && colorType != '' &&
       <div style={{marginTop: "2rem"}}>
-        <div className="d-flex justify-content-end">
+        {/* <div className="d-flex justify-content-end">
         <Button
         style={{ padding: '5px 10px', borderColor: '#bab8b8', color: '#000000' ,backgroundColor: '#ffffff', margin: "0.3rem 2rem" }}
       >
         Download
       </Button>
-        </div>
+        </div> */}
       <div
         className="d-flex flex-row justify-content-between align-items-strech .flex-{grow|shrink}-1"
         style={{ minHeight: "200px", margin: "0.3rem 2rem" }}
+        id="newPalette"
       > 
         {newColors?.map((color, index) => (
           <div

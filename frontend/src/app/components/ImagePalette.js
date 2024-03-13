@@ -1,10 +1,10 @@
-// frontend/src/components/Palette.js
 import React, { useState } from "react";
 import { Button, Image, Spinner } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCopy } from "@fortawesome/free-solid-svg-icons";
-import { LoadingState } from "./LoadingState";
 import { findSignificantColors } from "../api/palette/findSignificantColors";
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 const ImagePalette = () => {
   const [colors, setColors] = useState([{ rgb: [256, 256, 256] }]);
@@ -41,6 +41,19 @@ const ImagePalette = () => {
     setIsClicked(false);
     setColors([{ rgb: [256, 256, 256] }]);
   };
+
+  const handleDownload = () => {
+    const palette = document.getElementById('palette');
+
+    html2canvas(palette, {scale: 3})
+      .then((canvas) => {
+        const pdf = new jsPDF('l', 'px', [palette.offsetWidth * 2, palette.offsetHeight * 2]);
+        const imgData = canvas.toDataURL('image/jpeg', 1.0);
+        pdf.addImage(imgData, 'JPEG', 0, 0);
+        pdf.save('paletteFromImage.pdf');
+        
+      })
+  }
 
   const getContrastRatio = (color) => {
     const luminance = (color[0] * 0.299 + color[1] * 0.587 + color[2] * 0.114) / 255;
@@ -145,12 +158,15 @@ const ImagePalette = () => {
       <div className="d-flex justify-content-end">
       <Button
       style={{ padding: '5px 10px', borderColor: '#bab8b8', color: '#000000' ,backgroundColor: '#ffffff' }}
+      onClick={handleDownload}
     >
       Download
     </Button>
       </div>
       <div className="d-flex flex-row justify-content-between align-items-strech .flex-{grow|shrink}-1"
-         style={{ minHeight: "200px", marginTop: "0.5rem" }}>
+         style={{ minHeight: "200px", marginTop: "0.5rem" }}
+         id="palette"
+        >
         {colors?.map((color, index) => (
           <div
             className="d-flex flex-column justify-content-center align-items-center align-content-end"
