@@ -109,7 +109,6 @@ const Palette = () => {
           Welcome to our Color Palette Generator—a hub for unleashing your creative vision! 
           Craft unique color schemes effortlessly with our user-friendly tool. <br></br><br></br>
           <b>Simply generate a random palette or choose a color by selecting a color from the picker and click the lock icon to toggle locking the color. 
-          Click the copy icon to copy the hex code.
           <br></br>
           Additionally, there's an option to export your favourite palette to a PDF for future reference.</b>
         </p>
