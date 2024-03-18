@@ -10,7 +10,7 @@ import base64
 from io import BytesIO
 from PIL import Image, ImageOps
 import requests, json
-
+import random
 
 class GeneratePaletteAPI(APIView):
     colorMats = {
@@ -50,16 +50,21 @@ class GeneratePaletteAPI(APIView):
     def post(self, request):
         try:
             url = "http://colormind.io/api/"
+            list_url = "http://colormind.io/list/"
+            
+            response = requests.get(list_url)
             data = request.data
             colorBlindnessType = request.query_params.get('colorType', None)
             print(colorBlindnessType)
 
 
             # model is the color model specified in the request data. 
-            # It defaults to 'default' if not provided.
             # input_colors is a list of colors provided in the request data. 
-            # It defaults to an empty list if not provided.
-            model = data.get('model', 'default')
+            #model = data.get('model', 'default')
+
+            if response.status_code == 200:
+                models = response.json().get('result', [])
+                model = random.choice(models)
             input_colors = data.get('input', [])
 
             payload = {
