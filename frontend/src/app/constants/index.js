@@ -1,9 +1,9 @@
-const baseUrl =
-  process.env.NODE_ENV === "production"
-    ? process.env.NEXT_PUBLIC_API_URL
-    : "http://localhost:8000/api/";
+// const baseUrl =
+//   process.env.NODE_ENV === "production"
+//     ? process.env.NEXT_PUBLIC_API_URL
+//     : "http://localhost:8000/api/";
 // const baseUrl = process.env.API_URL_DEV
-//const baseUrl = 'https://color-accessibility-c26550ebbc98.herokuapp.com/api/'
+const baseUrl = 'https://color-accessibility-c26550ebbc98.herokuapp.com/api/';
 
 const color_dict = {
     0: 'Red',
@@ -16,8 +16,7 @@ const color_dict = {
     7: 'Brown',
     8: 'Grey',
     9: 'Black',
-    10: 'White'
-}
+    10: 'White',
+};
 
-
-export {baseUrl, color_dict}
+export { baseUrl, color_dict };

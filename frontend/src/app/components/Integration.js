@@ -1,12 +1,38 @@
 // import pic from '../public/example.png';
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import ColorInfo from './ColorInfo';
 import { Image, Form, Button } from 'react-bootstrap';
 import { color_dict } from '../constants';
 
 const Integration = ({ sendPhase, file, labels }) => {
     const imageRef = useRef(null);
-    const [color, setColor] = useState({ name: '', hex: '', rgb: '', label: '' });
+    const [isModified, setIsModified] = useState(false);
+    const [modifiedImage, setModifiedImage] = useState('');
+    const [color, setColor] = useState({
+        name: '',
+        hex: '',
+        rgb: '',
+        label: '',
+    });
+
+    const [colorGroups, setColorGroups] = useState({}); // State to store color groups
+
+    useEffect(() => {
+        // Initialize color groups when labels change
+        setColorGroups(groupIndex(labels));
+    }, [labels]);
+
+    const groupIndex = (labels) => {
+        const colorGroups = {};
+        Object.keys(labels).forEach((key) => {
+            const label = labels[key];
+            if (!colorGroups[label]) {
+                colorGroups[label] = [];
+            }
+            colorGroups[label].push(parseInt(key));
+        });
+        return colorGroups;
+    };
 
     const findColorName = async (input, label) => {
         const red = input[0];
@@ -40,59 +66,101 @@ const Integration = ({ sendPhase, file, labels }) => {
         const index = labels[y * imageElement.naturalWidth + x];
 
         return index;
-    }
+    };
 
     const handleImageClick = (e) => {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
-        const x = e.nativeEvent.offsetX;
-        const y = e.nativeEvent.offsetY;
 
         canvas.width = imageRef.current.width;
         canvas.height = imageRef.current.height;
 
         ctx.drawImage(imageRef.current, 0, 0, canvas.width, canvas.height);
 
-        const pixelData = ctx.getImageData(x, y, 1, 1).data;
-
+        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const pixels = imgData.data;
         const colorIndex = getColorIndex(e);
+        const selectedGroup = colorGroups[colorIndex];
 
-        findColorName(pixelData, color_dict[colorIndex]);
+        for (let i = 0; i < pixels.length; i += 4) {
+            const dataIndex = i / 4;
+            if (!selectedGroup.includes(dataIndex)) {
+                pixels[i + 3] = pixels[i + 3] * 0.1;
+            }
+        }
+
+        ctx.putImageData(imgData, 0, 0);
+
+        findColorName(pixels, color_dict[colorIndex]);
+
+        const modifiedImageURL = canvas.toDataURL(); // Convert canvas to base64 URL
+
+        setModifiedImage(modifiedImageURL);
+        setIsModified(true);
     };
 
     return (
-      <div style={{margin: "2rem", width: "100%", display: "flex", justifyContent: "space-evenly"}}>
-        <div style={{display: "flex", justifyContent: "center"}}>
-            <div style={{maxHeight: "50rem"}}>
-                <Image 
-                src={URL.createObjectURL(file)} 
-                ref={imageRef}
-                alt="Image"
-                fluid
-                onClick={handleImageClick}
-                style={{maxHeight: "50rem"}}/>
+        <div
+            style={{
+                margin: '2rem',
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'space-evenly',
+            }}
+        >
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <div style={{ maxHeight: '50rem' }}>
+                    <Image
+                        src={
+                            isModified
+                                ? modifiedImage
+                                : URL.createObjectURL(file)
+                        }
+                        ref={imageRef}
+                        alt="Image"
+                        fluid
+                        onClick={isModified ? null : handleImageClick}
+                        style={{ maxHeight: '50rem' }}
+                    />
+                </div>
             </div>
-        </div>
-        <div>
-            <ColorInfo color={color} />
+            <div>
+                <ColorInfo color={color} />
 
-            <div style={{marginTop: '2rem'}}>
-                <h5>Color Correct</h5>
-                <div style={{height: '1px', width: '100%', backgroundColor: 'black'}}></div>
-                <div style={{margin: "1rem auto 0.5rem auto"}}>Choose a Type of Color Blindness</div>
-                <Form.Select aria-label="Default select example" style={{marginTop: '1rem'}}>
-                    <option value="1">Yellow</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
-                </Form.Select>
-                <Button
-                style={{ backgroundColor: '#39545B', margin: "1rem auto" }}
-            >
-                CORRECT COLORS
-            </Button>
+                <div style={{ marginTop: '2rem' }}>
+                    <h5>Color Correct</h5>
+                    <div
+                        style={{
+                            height: '1px',
+                            width: '100%',
+                            backgroundColor: 'black',
+                        }}
+                    ></div>
+                    <div style={{ margin: '1rem auto 0.5rem auto' }}>
+                        Choose a Type of Color Blindness
+                    </div>
+                    <Form.Select
+                        aria-label="Default select example"
+                        style={{ marginTop: '1rem' }}
+                    >
+                        <option value="1">Yellow</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option>
+                    </Form.Select>
+                    <Button
+                        style={{
+                            backgroundColor: isModified
+                                ? '#39545B'
+                                : 'transparent',
+                            margin: '1rem auto',
+                        }}
+                        onClick={() => setIsModified(false)}
+                    >
+                        RESET
+                    </Button>
+                </div>
             </div>
         </div>
-      </div>
     );
 };
 
