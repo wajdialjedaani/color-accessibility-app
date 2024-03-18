@@ -63,7 +63,8 @@ const Integration = ({ sendPhase, file, labels }) => {
     return (
       <div style={{margin: "2rem", width: "100%", display: "flex", justifyContent: "space-evenly"}}>
         <div style={{display: "flex", justifyContent: "center"}}>
-            <div style={{maxHeight: "50rem"}}>
+            {file &&
+                <div style={{maxHeight: "50rem"}}>
                 <Image 
                 src={URL.createObjectURL(file)} 
                 ref={imageRef}
@@ -72,11 +73,14 @@ const Integration = ({ sendPhase, file, labels }) => {
                 onClick={handleImageClick}
                 style={{maxHeight: "50rem"}}/>
             </div>
+            }
         </div>
         <div>
-            <ColorInfo color={color} />
+            {labels?.length !== 0 &&
+                <ColorInfo color={color} />
+            }
 
-            <div style={{marginTop: '2rem'}}>
+            {/* <div style={{marginTop: '2rem'}}>
                 <h5>Color Correct</h5>
                 <div style={{height: '1px', width: '100%', backgroundColor: 'black'}}></div>
                 <div style={{margin: "1rem auto 0.5rem auto"}}>Choose a Type of Color Blindness</div>
@@ -90,7 +94,7 @@ const Integration = ({ sendPhase, file, labels }) => {
             >
                 CORRECT COLORS
             </Button>
-            </div>
+            </div> */}
         </div>
       </div>
     );
