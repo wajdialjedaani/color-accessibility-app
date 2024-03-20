@@ -14,6 +14,7 @@ const Integration = ({ sendPhase, file, labels }) => {
         rgb: '',
         label: '',
     });
+    const [labelIndex, setLabelIndex] = useState(0);
 
     const [colorGroups, setColorGroups] = useState({}); // State to store color groups
 
@@ -80,6 +81,8 @@ const Integration = ({ sendPhase, file, labels }) => {
         const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         const pixels = imgData.data;
         const colorIndex = getColorIndex(e);
+        setLabelIndex(colorIndex);
+        
         const selectedGroup = colorGroups[colorIndex];
 
         for (let i = 0; i < pixels.length; i += 4) {
@@ -98,6 +101,10 @@ const Integration = ({ sendPhase, file, labels }) => {
         setModifiedImage(modifiedImageURL);
         setIsModified(true);
     };
+    
+    const hightlightClicked = () => {
+
+    }
 
     return (
         <div
@@ -110,6 +117,7 @@ const Integration = ({ sendPhase, file, labels }) => {
         >
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <div style={{ maxHeight: '50rem' }}>
+                    {file && 
                     <Image
                         src={
                             isModified
@@ -122,13 +130,16 @@ const Integration = ({ sendPhase, file, labels }) => {
                         onClick={isModified ? null : handleImageClick}
                         style={{ maxHeight: '50rem' }}
                     />
+                }
                 </div>
             </div>
             <div>
-                <ColorInfo color={color} />
+                {labels?.length !== 0 &&
+                    <ColorInfo color={color} />
+                }
 
                 <div style={{ marginTop: '2rem' }}>
-                    <h5>Color Correct</h5>
+                    <h5>Color Highlight</h5>
                     <div
                         style={{
                             height: '1px',
@@ -137,22 +148,29 @@ const Integration = ({ sendPhase, file, labels }) => {
                         }}
                     ></div>
                     <div style={{ margin: '1rem auto 0.5rem auto' }}>
-                        Choose a Type of Color Blindness
+                        Choose a Color
                     </div>
                     <Form.Select
                         aria-label="Default select example"
                         style={{ marginTop: '1rem' }}
+                        value={labelIndex}
+                        onChange={(e) => {setLabelIndex(e.target.value)}}
                     >
-                        <option value="1">Yellow</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
+                        {Object.keys(color_dict).map((i, idx) => <option value={i} key={idx} >{color_dict[i]}</option>)}
                     </Form.Select>
                     <Button
                         style={{
-                            backgroundColor: isModified
-                                ? '#39545B'
-                                : 'transparent',
+                            margin: '1rem',
+                            border: 'none'
+                        }}
+                        onClick={() => setIsModified(false)}
+                    >
+                        HIGHLIGHT
+                    </Button>
+                    <Button
+                        style={{
                             margin: '1rem auto',
+                            border: 'none'
                         }}
                         onClick={() => setIsModified(false)}
                     >

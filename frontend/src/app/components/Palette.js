@@ -150,8 +150,11 @@ const Palette = () => {
         </Button>
         </div>
       </div>
+
         {/* Random Palette Display */}
-        <div className="d-flex justify-content-end">
+      <div style={{display: 'flex', justifyContent: 'space-between'}}>
+
+      <strong style={{margin: '0 2rem', display: 'flex', alignItems: 'center'}}> Normal Vision </strong>
       <Button
         style={{ padding: '5px 10px', borderColor: '#bab8b8', color: '#000000' ,backgroundColor: '#ffffff', margin: "0.5rem 2rem" }}
         onClick={handleDownload}      
@@ -226,14 +229,8 @@ const Palette = () => {
       </div>
         {/* Colorblind Palette Display */}
       {flag && colorType != '' &&
-      <div style={{marginTop: "2rem"}}>
-        {/* <div className="d-flex justify-content-end">
-        <Button
-        style={{ padding: '5px 10px', borderColor: '#bab8b8', color: '#000000' ,backgroundColor: '#ffffff', margin: "0.3rem 2rem" }}
-      >
-        Download
-      </Button>
-        </div> */}
+      <div>
+        <strong style={{margin: '2rem 0 0 2rem', display: 'flex', alignItems: 'center'}}>{colorType} Vision</strong>
       <div
         className="d-flex flex-row justify-content-between align-items-strech .flex-{grow|shrink}-1"
         style={{ minHeight: "200px", margin: "0.3rem 2rem" }}
