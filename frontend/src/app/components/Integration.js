@@ -16,24 +16,27 @@ const Integration = ({ sendPhase, file, labels }) => {
     });
     const [labelIndex, setLabelIndex] = useState(0);
 
-    const [colorGroups, setColorGroups] = useState({}); // State to store color groups
+    //const [colorGroups, setColorGroups] = useState({}); // State to store color groups
+    const [colorGroups, setColorGroups] = useState(Object.keys(color_dict).map((i) => ({ index: parseInt(i), pixels: [], url: '' }))); // { index: number; pixels: Array(number); url: string }
 
     useEffect(() => {
-        // Initialize color groups when labels change
-        setColorGroups(groupIndex(labels));
+        const test = groupIndex(labels);
+        setColorGroups(test);
     }, [labels]);
 
     const groupIndex = (labels) => {
-        const colorGroups = {};
+        const groups = [...colorGroups];
         Object.keys(labels).forEach((key) => {
             const label = labels[key];
-            if (!colorGroups[label]) {
-                colorGroups[label] = [];
+            const g = groups.find((i) => (i.index === parseInt(label)))
+            if (g){
+                g.pixels.push(parseInt(key));
             }
-            colorGroups[label].push(parseInt(key));
         });
-        return colorGroups;
+
+        return groups;
     };
+
 
     const findColorName = async (input, label) => {
         const red = input[0];
@@ -83,27 +86,47 @@ const Integration = ({ sendPhase, file, labels }) => {
         const colorIndex = getColorIndex(e);
         setLabelIndex(colorIndex);
         
-        const selectedGroup = colorGroups[colorIndex];
+        // const selectedGroup = colorGroups[colorIndex];
 
-        for (let i = 0; i < pixels.length; i += 4) {
-            const dataIndex = i / 4;
-            if (!selectedGroup.includes(dataIndex)) {
-                pixels[i + 3] = pixels[i + 3] * 0.1;
-            }
-        }
+        // for (let i = 0; i < pixels.length; i += 4) {
+        //     const dataIndex = i / 4;
+        //     if (!selectedGroup.includes(dataIndex)) {
+        //         pixels[i + 3] = pixels[i + 3] * 0.1;
+        //     }
+        // }
 
         ctx.putImageData(imgData, 0, 0);
 
         findColorName(pixels, color_dict[colorIndex]);
-
-        const modifiedImageURL = canvas.toDataURL(); // Convert canvas to base64 URL
-
-        setModifiedImage(modifiedImageURL);
-        setIsModified(true);
     };
     
     const hightlightClicked = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
 
+        canvas.width = imageRef.current.width;
+        canvas.height = imageRef.current.height;
+
+        ctx.drawImage(imageRef.current, 0, 0, canvas.width, canvas.height);
+
+        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const pixels = imgData.data;
+        const selectedGroup = colorGroups.find((i) => i.index === parseInt(labelIndex));
+        console.log(selectedGroup);
+
+        for (let i = 0; i < selectedGroup?.pixels.length; i += 4) {
+            const dataIndex = i / 4;
+            if (!selectedGroup.pixels.find((idx) => (idx === dataIndex))) {
+                pixels[i + 3] = pixels[i + 3] * 0.1;
+            }
+        }
+
+        const modifiedImageURL = canvas.toDataURL(); // Convert canvas to base64 URL
+
+
+        setModifiedImage(modifiedImageURL);
+        console.log(modifiedImageURL)
+        setIsModified(true);
     }
 
     return (
@@ -135,48 +158,51 @@ const Integration = ({ sendPhase, file, labels }) => {
             </div>
             <div>
                 {labels?.length !== 0 &&
+                <div>
                     <ColorInfo color={color} />
-                }
+                
 
-                <div style={{ marginTop: '2rem' }}>
-                    <h5>Color Highlight</h5>
-                    <div
-                        style={{
-                            height: '1px',
-                            width: '100%',
-                            backgroundColor: 'black',
-                        }}
-                    ></div>
-                    <div style={{ margin: '1rem auto 0.5rem auto' }}>
-                        Choose a Color
+                    <div style={{ marginTop: '2rem' }}>
+                        <h5>Color Highlight</h5>
+                        <div
+                            style={{
+                                height: '1px',
+                                width: '100%',
+                                backgroundColor: 'black',
+                            }}
+                        ></div>
+                        <div style={{ margin: '1rem auto 0.5rem auto' }}>
+                            Choose a Color
+                        </div>
+                        <Form.Select
+                            aria-label="Default select example"
+                            style={{ marginTop: '1rem' }}
+                            value={labelIndex}
+                            onChange={(e) => {setLabelIndex(e.target.value)}}
+                        >
+                            {colorGroups.map((i, idx) => <option value={i.index} key={idx} >{color_dict[i.index]}</option>)}
+                        </Form.Select>
+                        <Button
+                            style={{
+                                margin: '1rem',
+                                border: 'none'
+                            }}
+                            onClick={hightlightClicked}
+                        >
+                            HIGHLIGHT
+                        </Button>
+                        <Button
+                            style={{
+                                margin: '1rem auto',
+                                border: 'none'
+                            }}
+                            onClick={() => setIsModified(false)}
+                        >
+                            RESET
+                        </Button>
                     </div>
-                    <Form.Select
-                        aria-label="Default select example"
-                        style={{ marginTop: '1rem' }}
-                        value={labelIndex}
-                        onChange={(e) => {setLabelIndex(e.target.value)}}
-                    >
-                        {Object.keys(color_dict).map((i, idx) => <option value={i} key={idx} >{color_dict[i]}</option>)}
-                    </Form.Select>
-                    <Button
-                        style={{
-                            margin: '1rem',
-                            border: 'none'
-                        }}
-                        onClick={() => setIsModified(false)}
-                    >
-                        HIGHLIGHT
-                    </Button>
-                    <Button
-                        style={{
-                            margin: '1rem auto',
-                            border: 'none'
-                        }}
-                        onClick={() => setIsModified(false)}
-                    >
-                        RESET
-                    </Button>
                 </div>
+                }
             </div>
         </div>
     );
