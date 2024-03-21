@@ -4,7 +4,8 @@ import Palette from '../../components/Palette';
 export default function Page() {
   return (
     <div>
-    <Palette />
+      <title>True Hue | Color Palette</title>
+      <Palette />
     </div>
   )
 }

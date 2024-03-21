@@ -69,7 +69,7 @@ const Page = () => {
     {
       id: 1,
       title: "Color Palette",
-      backgroundColor: "#E0835A",
+      backgroundColor: "#C35E32",
       route: 'palette',
       description:
         " Let your creativity flourish. Our Color Palette Generator empowers you to craft captivating color schemes that are accessible to everyone. Achieve harmony and inclusivity in your designs effortlessly.",
@@ -93,37 +93,40 @@ const Page = () => {
   ];
 
   return (
-    <Container
-      fluid
-      className="d-flex flex-column align-items-center"
-      style={{ marginTop: "1rem", minHeight: "100vh" }}
-    >
-      <HeaderTypography>
-        True Hue: Colour Accessibility
-        <p className="main-description mt-4">
-          See the world in every hue: Discover our Color Accessibility App for
-          an inclusive and vibrant digital experience.
-        </p>
-      </HeaderTypography>
+    <div>
+       <title>True Hue</title>
+      <Container
+        fluid
+        className="d-flex flex-column align-items-center"
+        style={{ marginTop: "1rem", minHeight: "100vh" }}
+      >
+        <HeaderTypography>
+          True Hue: Colour Accessibility
+          <p className="main-description mt-4">
+            See the world in every hue: Discover our Color Accessibility App for
+            an inclusive and vibrant digital experience.
+          </p>
+        </HeaderTypography>
 
-      <FeatureGrid>
-        {features.map((feature) => (
-          <Col xs={12} sm={6} md={4} key={feature.id}>
-            <FeatureItem >
-              <CTAButton
-                backgroundColor={feature.backgroundColor}
-                href={`/pages/${feature.route}`}
-                >
-                {feature.title}
-              </CTAButton>
-              <p style={{ fontSize: "15px", color: "#6c6768" }}>
-                {feature.description}
-              </p>
-            </FeatureItem>
-          </Col>
-        ))}
-      </FeatureGrid>
-    </Container>
+        <FeatureGrid>
+          {features.map((feature) => (
+            <Col xs={12} sm={6} md={4} key={feature.id}>
+              <FeatureItem >
+                <CTAButton
+                  backgroundColor={feature.backgroundColor}
+                  href={`/pages/${feature.route}`}
+                  >
+                  {feature.title}
+                </CTAButton>
+                <p style={{ fontSize: "15px", color: "#6c6768" }}>
+                  {feature.description}
+                </p>
+              </FeatureItem>
+            </Col>
+          ))}
+        </FeatureGrid>
+      </Container>
+    </div>
   );
 };
 

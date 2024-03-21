@@ -3,21 +3,22 @@
 import { Button } from 'react-bootstrap';
 import React, { useState, useRef } from 'react';
 import { uploadImage } from '../api/image/route';
-import { findSignificantColors } from '../api/palette/findSignificantColors';
 import Integration from '../components/Integration';
-import { LoadingState } from './LoadingState';
 
-export default function Landing({ sendPhase }) {
+export default function Landing({ setLoading }) {
     const [image, setImage] = useState(null);
-    const [resizedImage, setResizedImage] = useState(null);
-    const [isLoad, setIsLoad] = useState(false);
     const [labels, setLabels] = useState([]);
     const fileInputRef = useRef(null); // Ref for the file input element
 
     const handleChange = (e) => {
-        console.log(e.target.files);
         const file = e.target.files[0];
-        setImage(file);
+        resizeImageByScale(file)
+            .then((resizedImage) => {
+                setImage(resizedImage);
+            })
+            .catch((error) => {
+                console.error('Error resizing image:', error);
+            });
         setLabels([]);
     };
 
@@ -50,7 +51,7 @@ export default function Landing({ sendPhase }) {
     };
 
     const chooseImageScale = (w, h) => {
-        const maxSize = 5 * Math.pow(10, 5);
+        const maxSize = 6 * Math.pow(10, 5);
 
         if (w * h <= maxSize) return 1;
         const scale = Math.sqrt(maxSize / (w * h));
@@ -66,21 +67,12 @@ export default function Landing({ sendPhase }) {
             console.log('Please select a file');
         }
 
-        setIsLoad(true);
+        setLoading(true);
 
-        resizeImageByScale(image)
-            .then((resizedImage) => {
-                uploadImage(resizedImage).then((res) => {
-                    setImage(resizedImage);
-                    setResizedImage(resizedImage);
-                    setLabels(res?.data?.label);
-                    setIsLoad(false);
-                });
-            })
-            .catch((error) => {
-                console.error('Error resizing image:', error);
-                setIsLoad(false);
-            });
+        uploadImage(image).then((res) => {
+            setLabels(res?.data?.label);
+            console.log('Extracting labels done.')
+        });
     };
 
     const handleClearImage = () => {
@@ -155,11 +147,9 @@ export default function Landing({ sendPhase }) {
                 </Button>
             </div>
 
-            {isLoad && <LoadingState />}
-
-            {resizedImage !== null && (
+            {image !== null && (
                 <div>
-                    <Integration file={resizedImage} labels={labels} />
+                    <Integration file={image} labels={labels} setLoading={setLoading}/>
                 </div>
             )}
         </div>

@@ -3,9 +3,8 @@ import React, { useRef, useState, useEffect } from 'react';
 import ColorInfo from './ColorInfo';
 import { Image, Form, Button } from 'react-bootstrap';
 import { color_dict } from '../constants';
-import { LoadingState } from './LoadingState';
 
-const Integration = ({ sendPhase, file, labels }) => {
+const Integration = ({ setLoading, file, labels }) => {
     const imageRef = useRef(null);
     const [isModified, setIsModified] = useState(false);
     const [imgSource, setImgSource] = useState(URL.createObjectURL(file));
@@ -18,7 +17,6 @@ const Integration = ({ sendPhase, file, labels }) => {
     });
     const [labelIndex, setLabelIndex] = useState(0);
 
-    //const [colorGroups, setColorGroups] = useState({}); // State to store color groups
     const [colorGroups, setColorGroups] = useState(
         Object.keys(color_dict).map((i) => ({
             index: parseInt(i),
@@ -28,27 +26,21 @@ const Integration = ({ sendPhase, file, labels }) => {
     ); // { index: number; pixels: Array(number); url: string }
 
     useEffect(() => {
-        const test = groupIndex(labels);
         setImgSource(URL.createObjectURL(file));
-        setColorGroups(test);
-    }, [labels]);
+        setColorGroups(groupIndex(labels));
 
-    useEffect(() => {
+        console.log('Generating highlighted images...')
         if (
             imageRef.current &&
             imageRef.current.complete &&
             imageRef.current.naturalWidth !== 0
         ) {
-            console.log('Image loaded');
             const updatedColorGroups = colorGroups.map((group) => {
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
 
-                canvas.width = imageRef.current.width;
-                canvas.height = imageRef.current.height;
-
-                // console.log(canvas.width, canvas.height);
-                // console.log(canvas.width * canvas.height);
+                canvas.width = imageRef.current.naturalWidth;
+                canvas.height = imageRef.current.naturalHeight;
 
                 ctx.drawImage(
                     imageRef.current,
@@ -82,19 +74,21 @@ const Integration = ({ sendPhase, file, labels }) => {
             });
 
             setColorGroups(updatedColorGroups);
+            setLoading(false);
         }
-    }, [file]);
+    }, [labels]);
 
     const groupIndex = (labels) => {
         const groups = [...colorGroups];
-        Object.keys(labels).forEach((key) => {
-            const label = labels[key];
-            const g = groups.find((i) => i.index === parseInt(label));
-            if (g) {
-                g.pixels.push(parseInt(key));
-            }
-        });
-
+        if (labels){
+            Object.keys(labels).forEach((key) => {
+                const label = labels[key];
+                const g = groups.find((i) => i.index === parseInt(label));
+                if (g) {
+                    g.pixels.push(parseInt(key));
+                }
+            });
+        }
         return groups;
     };
 
@@ -127,22 +121,15 @@ const Integration = ({ sendPhase, file, labels }) => {
         const x = Math.floor(xRatio * imageElement.naturalWidth);
         const y = Math.floor(yRatio * imageElement.naturalHeight);
 
-        const index = labels[y * imageElement.naturalWidth + x];
-
-        setLabelIndex(index);
-        findColorName(y * imageElement.naturalWidth + x, color_dict[index]);
-
-        return index;
+        const index = y * imageElement.naturalWidth + x;
+        
+        setLabelIndex(labels[index]);
+        findColorName(index, color_dict[labels[index]]);
     };
 
     const hightlightClicked = () => {
         setImgSource(colorGroups[labelIndex].url);
         setIsModified(true);
-        console.log(colorGroups);
-        console.log(
-            imageRef.current.naturalWidth,
-            imageRef.current.naturalHeight
-        );
     };
 
     return (
@@ -193,7 +180,7 @@ const Integration = ({ sendPhase, file, labels }) => {
                                     setLabelIndex(e.target.value);
                                 }}
                             >
-                                {colorGroups.map((i, idx) => (
+                                {colorGroups.filter((i) => i.pixels.length > 0).map((i, idx) => (
                                     <option value={i.index} key={idx}>
                                         {color_dict[i.index]}
                                     </option>

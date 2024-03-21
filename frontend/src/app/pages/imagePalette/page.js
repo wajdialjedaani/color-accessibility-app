@@ -4,7 +4,8 @@ import ImagePalette from '../../components/ImagePalette';
 export default function page() {
   return (
     <div>
-    <ImagePalette />
+        <title>True Hue | Image Palette</title>
+        <ImagePalette />
     </div>
   )
 }

@@ -102,6 +102,7 @@ export default function Simulator() {
 
     return (
     <div>
+        <title>True Hue | Color Simulator</title>
       {/* Header and Description */}
       <div style={{margin: '2rem'}}>
           <h3> Online Colorblindness Simulator</h3>
