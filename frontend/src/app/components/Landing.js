@@ -9,6 +9,7 @@ import { LoadingState } from './LoadingState';
 
 export default function Landing({ sendPhase }) {
     const [image, setImage] = useState(null);
+    const [resizedImage, setResizedImage] = useState(null);
     const [isLoad, setIsLoad] = useState(false);
     const [labels, setLabels] = useState([]);
     const fileInputRef = useRef(null); // Ref for the file input element
@@ -49,7 +50,7 @@ export default function Landing({ sendPhase }) {
     };
 
     const chooseImageScale = (w, h) => {
-        const maxSize = 6 * Math.pow(10, 5);
+        const maxSize = 5 * Math.pow(10, 5);
 
         if (w * h <= maxSize) return 1;
         const scale = Math.sqrt(maxSize / (w * h));
@@ -71,6 +72,7 @@ export default function Landing({ sendPhase }) {
             .then((resizedImage) => {
                 uploadImage(resizedImage).then((res) => {
                     setImage(resizedImage);
+                    setResizedImage(resizedImage);
                     setLabels(res?.data?.label);
                     setIsLoad(false);
                 });
@@ -155,9 +157,9 @@ export default function Landing({ sendPhase }) {
 
             {isLoad && <LoadingState />}
 
-            {image !== null && (
+            {resizedImage !== null && (
                 <div>
-                    <Integration file={image} labels={labels} />
+                    <Integration file={resizedImage} labels={labels} />
                 </div>
             )}
         </div>

@@ -29,6 +29,7 @@ const Integration = ({ sendPhase, file, labels }) => {
 
     useEffect(() => {
         const test = groupIndex(labels);
+        setImgSource(URL.createObjectURL(file));
         setColorGroups(test);
     }, [labels]);
 
@@ -38,12 +39,16 @@ const Integration = ({ sendPhase, file, labels }) => {
             imageRef.current.complete &&
             imageRef.current.naturalWidth !== 0
         ) {
+            console.log('Image loaded');
             const updatedColorGroups = colorGroups.map((group) => {
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
 
                 canvas.width = imageRef.current.width;
                 canvas.height = imageRef.current.height;
+
+                // console.log(canvas.width, canvas.height);
+                // console.log(canvas.width * canvas.height);
 
                 ctx.drawImage(
                     imageRef.current,
@@ -123,8 +128,8 @@ const Integration = ({ sendPhase, file, labels }) => {
         const y = Math.floor(yRatio * imageElement.naturalHeight);
 
         const index = labels[y * imageElement.naturalWidth + x];
-         
-        setLabelIndex(y * imageElement.naturalWidth + x);
+
+        setLabelIndex(index);
         findColorName(y * imageElement.naturalWidth + x, color_dict[index]);
 
         return index;
@@ -133,6 +138,11 @@ const Integration = ({ sendPhase, file, labels }) => {
     const hightlightClicked = () => {
         setImgSource(colorGroups[labelIndex].url);
         setIsModified(true);
+        console.log(colorGroups);
+        console.log(
+            imageRef.current.naturalWidth,
+            imageRef.current.naturalHeight
+        );
     };
 
     return (
