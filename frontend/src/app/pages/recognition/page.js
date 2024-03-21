@@ -1,8 +1,6 @@
 'use client';
 
 import Landing from '../../components/Landing';
-import Correction from '../../components/Correction';
-import Compare from '../../components/Compare';
 import Integration from '../../components/Integration';
 import { useState } from 'react';
 
@@ -25,10 +23,6 @@ function MyPage() {
             {phase.phase === 'integration' && (
                 <Integration sendPhase={handlePhaseChange} file={phase.file} labels={phase.labels}/>
             )}
-            {phase.phase === 'correction' && (
-                <Correction sendPhase={handlePhaseChange} />
-            )}
-            {phase.phase === 'analystFeedback' && <Compare />}
         </div>
     );
 }
