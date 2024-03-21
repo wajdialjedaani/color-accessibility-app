@@ -13,7 +13,7 @@ export async function uploadImage (image) {
     .then(async (response) => {
         const parsedResponse = await JSON.parse(response.data); 
         response.data = parsedResponse;
-        console.log(response);
+        
         return response;
     })
     .catch((err) => console.log(err));
