@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { Button, Form, FormControl, FormGroup } from 'react-bootstrap';
 
 function Chatbox() {
@@ -73,34 +73,37 @@ function Chatbox() {
         }
     };
 
-  return (
-    <div className="chatbox rounded rounded-25">
-      <div className="chatbox-messages">
-        {content.map((chat, index) => (
-          <div key={index} className={`message ${chat.role}`}>
-            {chat.content}
-          </div>
-        ))}
-        <div ref={bottomRef} />
-      </div>
-      <form className="parent-container d-flex w-100">
-        <input
-          className='form-control w-100 bg-light'
-          type="text"
-          value={message}
-          onChange={handleChange}
-          placeholder="Type your message..."
-        />
-        
-        <Button onClick={handleSubmit} variant="info">
-          <FontAwesomeIcon icon={faPaperPlane} size="lg" />
-        </Button>
-        <Button onClick={handleClear} variant="text">
-          Clear
-        </Button>
-      </form>
-    </div>
-  );
+    return (
+        <div className="chatbox rounded rounded-25">
+            <div className="chatbox-messages p-2">
+                {content.map((chat, index) => (
+                    <div key={index} className={`message ${chat.role}`}>
+                        {chat.content}
+                    </div>
+                ))}
+                <div ref={bottomRef} />
+            </div>
+            <form
+                onSubmit={handleSubmit}
+                className="parent-container d-flex w-100"
+            >
+                <input
+                    className="form-control w-100 bg-light"
+                    type="text"
+                    value={message}
+                    onChange={handleChange}
+                    placeholder="Type your message..."
+                />
+
+                <Button onClick={handleSubmit} variant="info">
+                    <FontAwesomeIcon icon={faPaperPlane} size="lg" />
+                </Button>
+                <Button onClick={handleClear} variant="text">
+                    Clear
+                </Button>
+            </form>
+        </div>
+    );
 }
 
 export default Chatbox;
