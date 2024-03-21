@@ -7,6 +7,7 @@ const SimulatorForm = ({
   handleChangeType,
   handleReset,
   simulateType,
+  fileInputRef,
 }) => {
   return (
     <div>
@@ -18,7 +19,7 @@ const SimulatorForm = ({
             type="file"
             accept="image/*"
             onChange={handleChange}
-            
+            ref={fileInputRef}
         />
         </div>
         {/* {fileChosen || (

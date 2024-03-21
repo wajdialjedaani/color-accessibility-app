@@ -1,37 +1,34 @@
 import React from 'react';
-import { Spinner } from 'react-bootstrap';
 import { LoadingState } from './LoadingState';
 
 const SimulatorDisplay = ({ resizedImage, imageUrl, simulateType, isLoad }) => {
   return (
-    <div style={{ position: 'relative' }}>
+    <div style={{ margin: "1.5rem"}}>
     {isLoad && (
         <LoadingState />
     )}
 
-    <div style={{margin: "2rem", width: "100%", display: "flex", justifyContent: "space-evenly"}}>
-        <div style={{display: "flex", justifyContent: "center"}}>
+    <div style={{ margin: "1rem", width: "100%", display: "flex", justifyContent: "space-evenly"}}>
         {resizedImage && (
-                <div style={{ marginTop: '2rem' }}>
+                <div style={{ marginTop: '1.5rem' }}>
                   <h6> Normal Vision </h6>
                     <img
                         src={URL.createObjectURL(resizedImage)}
                         alt="Resized Image"
-                        style={{ marginRight: '3rem', maxWidth: '100%', maxHeight: '400px' }}
+                        style={{ maxWidth: '100%', maxHeight: '600px' }}
                     />
                 </div>
             )}
         {imageUrl && (
-                <div style={{ marginTop: '2rem' }}>
+                <div style={{ margin: '1.5rem' }}>
                   <h6> {simulateType} Vision </h6>
                     <img
                         src={`data:image/jpeg;base64,${imageUrl}`}
                         alt="Modified Image"
-                        style={{ maxWidth: '100%', maxHeight: '400px' }}
+                        style={{ maxWidth: '100%', maxHeight: '600px' }}
                     />
                 </div>
             )}
-        </div>
         </div>
     </div>
   );
