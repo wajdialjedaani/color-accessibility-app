@@ -1,37 +1,12 @@
 import React from 'react';
 import { Spinner } from 'react-bootstrap';
+import { LoadingState } from './LoadingState';
 
 const SimulatorDisplay = ({ resizedImage, imageUrl, simulateType, isLoad }) => {
   return (
     <div style={{ position: 'relative' }}>
     {isLoad && (
-        <div
-            style={{
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                backgroundColor: 'rgba(0, 0, 0, 0.5)', 
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                zIndex: 9999, 
-            }}
-        >
-            <div
-                style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    gap: '1rem',
-                    color: 'white',
-                }}
-            >
-                <Spinner animation="border" variant="light" />
-                <span>Processing...</span>
-            </div>
-        </div>
+        <LoadingState />
     )}
 
     <div style={{margin: "2rem", width: "100%", display: "flex", justifyContent: "space-evenly"}}>

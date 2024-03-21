@@ -1,12 +1,11 @@
 "use client"
 import Palette from '../../components/Palette';
-import ImagePalette from '../../components/ImagePalette';
 
 export default function Page() {
   return (
     <div>
-    <Palette />
-    <ImagePalette />
+      <title>True Hue | Color Palette</title>
+      <Palette />
     </div>
   )
 }

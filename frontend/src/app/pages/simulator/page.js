@@ -1,6 +1,5 @@
 'use client';
 
-import { Button, Form, Spinner } from 'react-bootstrap';
 import React, { useState } from 'react';
 import { simulateImage } from '../../api/simulation/simulateImage';
 import SimulatorForm from '../../components/SimulatorForm';
@@ -74,7 +73,6 @@ export default function Simulator() {
             .then(image => {
                 setImage(image);
 
-
                 simulateImage(image, simulateType).then(res => {
                   setIsLoad(false);
                   setImageUrl(res.modifiedImage)
@@ -104,6 +102,7 @@ export default function Simulator() {
 
     return (
     <div>
+        <title>True Hue | Color Simulator</title>
       {/* Header and Description */}
       <div style={{margin: '2rem'}}>
           <h3> Online Colorblindness Simulator</h3>
