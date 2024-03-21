@@ -123,8 +123,9 @@ const Integration = ({ sendPhase, file, labels }) => {
         const y = Math.floor(yRatio * imageElement.naturalHeight);
 
         const index = labels[y * imageElement.naturalWidth + x];
-        setLabelIndex(index);
-        findColorName(index, color_dict[index]);
+         
+        setLabelIndex(y * imageElement.naturalWidth + x);
+        findColorName(y * imageElement.naturalWidth + x, color_dict[index]);
 
         return index;
     };
