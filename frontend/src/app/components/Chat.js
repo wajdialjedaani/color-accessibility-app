@@ -19,7 +19,9 @@ function Chat() {
             setShow(false);
         }
     };
-
+    const handleCloseClicked = () => {
+        setShow(false);
+    };
     useEffect(() => {
         document.addEventListener('mousedown', handleClickOutside);
         return () => {
@@ -35,7 +37,7 @@ function Chat() {
                 style={{ backgroundColor: 'transparent' }}
                 ref={chatRef}
             >
-                <ChatBox />
+                <ChatBox onCloseClicked={handleCloseClicked} />
             </Toast>
             <FontAwesomeIcon
                 onClick={toggleShow}
