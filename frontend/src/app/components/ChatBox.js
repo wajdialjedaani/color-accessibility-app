@@ -1,23 +1,24 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
-import { Button, Form, FormControl, FormGroup } from 'react-bootstrap';
+import { faPaperPlane, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { Button} from 'react-bootstrap';
 
-function Chatbox() {
+function Chatbox({onCloseClicked}) {
     const [content, setContent] = useState([]);
     const [message, setMessage] = useState('');
-
     const bottomRef = useRef(null);
 
     // define a function to scroll to the bottom
     const scrollToBottom = () => {
-        bottomRef.current.scrollIntoView({ behavior: 'smooth' });
+        if (bottomRef.current) {
+            bottomRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
     };
 
     // call the function when the component is mounted or updated
     useEffect(() => {
         scrollToBottom();
-    });
+    }, [content]);
 
     useEffect(() => {
         // Load conversation from local storage when the component mounts
@@ -37,6 +38,9 @@ function Chatbox() {
         localStorage.clear();
     };
 
+    const handleCloseClicked = () => {
+        setShowChatbox(false);
+    };
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (message.trim() === '') return;
@@ -75,8 +79,12 @@ function Chatbox() {
 
     return (
         <div className="chatbox rounded rounded-25">
-            <div className="chatbox-messages p-2">
-                {content.map((chat, index) => (
+            <div className="d-flex flex-row justify-content-between p-2 adiv text-white align-items-center">
+            <span style={{fontSize: '15px'}}>Live chat</span>
+                    <div className="d-flex"><Button className="flex-1" style={{ backgroundColor: 'orange', border: 'transparent' }} onClick={onCloseClicked}><FontAwesomeIcon icon={faXmark} /></Button></div>
+            </div>   
+            <div className="chatbox-messages p-2">        
+            {content.map((chat, index) => (
                     <div key={index} className={`message ${chat.role}`}>
                         {chat.content}
                     </div>
