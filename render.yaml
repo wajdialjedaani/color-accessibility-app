@@ -1,7 +1,0 @@
-services:
-  - type: web
-    name: app-frontend
-    runtime: node
-    rootDir: frontend
-    buildCommand: npm run build
-    startCommand: npm start # or yarn start, depending on your setup
