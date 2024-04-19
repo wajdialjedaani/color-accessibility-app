@@ -29,7 +29,9 @@ SECRET_KEY = 'django-insecure-ir280m0c+!8%mma85k)pah(x0vomg9-%$yk36iyyra71^s*vv5
 ALLOWED_HOSTS = [
     'color-accessibility-c26550ebbc98.herokuapp.com', 
     'truehue-61186f1da362.herokuapp.com', 
-    'localhost', 
+    'truehue.onrender.com',
+    'localhost',
+    'truehue-app.onrender.com'
     '127.0.0.1']
 
 

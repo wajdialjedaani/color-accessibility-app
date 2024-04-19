@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { simulateImage } from '../../api/simulation/simulateImage';
 import SimulatorForm from '../../components/SimulatorForm';
 import SimulatorDisplay from '../../components/SimulatorDisplay';
@@ -12,6 +12,7 @@ export default function Simulator() {
     const [simulateType, setSimulateType] = useState('');
     const [imageUrl, setImageUrl] = useState('');
     const [fileChosen, setFileChosen] = useState(false);
+    const fileInputRef = useRef(null);
 
 
     const handleChange = (e) => {
@@ -19,6 +20,7 @@ export default function Simulator() {
         const file = e.target.files[0];
         setImage(file);
         setFileChosen(true);
+        setImageUrl('');
     };
 
     const resizeImageByScale = (imageFile) => {
@@ -32,6 +34,8 @@ export default function Simulator() {
 
                 const newWidth = img.width * scale;
                 const newHeight = img.height * scale;
+                console.log(img.width);
+                console.log(img.height);
     
                 canvas.width = newWidth;
                 canvas.height = newHeight;
@@ -98,6 +102,9 @@ export default function Simulator() {
         setImageUrl('');
         setResizedImage(null);
         setFileChosen(false);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+        }
     };
 
     return (
@@ -124,6 +131,7 @@ export default function Simulator() {
         handleChangeType={handleChangeType}
         handleReset={handleReset}
         simulateType={simulateType}
+        fileInputRef={fileInputRef}
       />
 
       <SimulatorDisplay

@@ -3,6 +3,8 @@ import React, { useRef, useState, useEffect } from 'react';
 import ColorInfo from './ColorInfo';
 import { Image, Form, Button } from 'react-bootstrap';
 import { color_dict } from '../constants';
+import ProgressBar from 'react-bootstrap/ProgressBar';
+import Card from 'react-bootstrap/Card';
 
 const Integration = ({ setLoading, file, labels }) => {
     const imageRef = useRef(null);
@@ -16,6 +18,7 @@ const Integration = ({ setLoading, file, labels }) => {
         label: '',
     });
     const [labelIndex, setLabelIndex] = useState(0);
+    const [flag, setFlag] = useState(false);
 
     const [colorGroups, setColorGroups] = useState(
         Object.keys(color_dict).map((i) => ({
@@ -72,7 +75,7 @@ const Integration = ({ setLoading, file, labels }) => {
 
                 return group;
             });
-
+            
             setColorGroups(updatedColorGroups);
             setLoading(false);
         }
@@ -127,22 +130,58 @@ const Integration = ({ setLoading, file, labels }) => {
         findColorName(index, color_dict[labels[index]]);
     };
 
-    const hightlightClicked = () => {
+    const highlightClicked = () => {
         setImgSource(colorGroups[labelIndex].url);
         setIsModified(true);
     };
 
+    const analyzeClicked = () => {
+        setFlag(!flag);
+    }
+
+    const calculatePercentage = (labelIndex) => {
+        if (imgData) {
+            const totalPixels = imgData.length / 4; // Divide by 4 because each pixel occupies 4 bytes (RGBA)
+            const pixelsCount = colorGroups[labelIndex].pixels.length;
+            return ((pixelsCount / totalPixels) * 100).toFixed(2);
+        } else {
+            return 0; // Return 0 if imgData is not yet available
+        }
+    };
+
+    const sortedColorGroups = colorGroups.slice().sort((a, b) => {
+        const percentageA = calculatePercentage(a.index);
+        const percentageB = calculatePercentage(b.index);
+        return percentageB - percentageA;
+    });
+
+
     return (
+    <div>
+        {labels?.length !== 0 &&
+        <div style={{ margin: '-1rem -1rem 0' }}>
+            <Button
+                style={{
+                    border: 'none',
+                    backgroundColor: '#7a765e',
+                    margin: '1rem',
+                }}
+                onClick={analyzeClicked}
+            >
+                {flag === true ? 'COLOR INFO' : 'ANALYZE'}
+            </Button>
+        </div>
+        }
         <div
             style={{
                 margin: '2rem',
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'space-evenly',
+                display: 'grid',
+                gridTemplateColumns: '2fr 1fr',
+                gridGap: '2rem',
             }}
         >
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <div style={{ maxHeight: '50rem' }}>
+            <div>
+                <div style={{ textAlign: 'center', maxHeight: '50rem' }}>
                     {file && (
                         <Image
                             src={imgSource}
@@ -156,7 +195,7 @@ const Integration = ({ setLoading, file, labels }) => {
                 </div>
             </div>
             <div>
-                {labels?.length !== 0 && (
+                {labels?.length !== 0 && !flag && (
                     <div>
                         <ColorInfo color={color} />
 
@@ -190,8 +229,9 @@ const Integration = ({ setLoading, file, labels }) => {
                                 style={{
                                     margin: '1rem',
                                     border: 'none',
+                                    backgroundColor: '#7a765e',
                                 }}
-                                onClick={hightlightClicked}
+                                onClick={highlightClicked}
                             >
                                 HIGHLIGHT
                             </Button>
@@ -199,10 +239,11 @@ const Integration = ({ setLoading, file, labels }) => {
                                 style={{
                                     margin: '1rem auto',
                                     border: 'none',
+                                    backgroundColor: '#7a765e',
                                 }}
                                 onClick={() => {
                                     setIsModified(false),
-                                        setImgSource(URL.createObjectURL(file));
+                                    setImgSource(URL.createObjectURL(file));
                                 }}
                             >
                                 RESET
@@ -210,8 +251,31 @@ const Integration = ({ setLoading, file, labels }) => {
                         </div>
                     </div>
                 )}
+                {flag && (
+                    <Card>
+                        <Card.Header>Color Percentage</Card.Header>
+                        <Card.Body>
+                        {sortedColorGroups.map((group, index) => (
+                            <div key={index} style={{ marginBottom: '0.5rem' }}>
+                                <div>{color_dict[group.index]}</div>
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <ProgressBar
+                                        striped variant="success"
+                                        now={calculatePercentage(group.index)}
+                                        style={{ width: '80%' }}
+                                    />
+                                    <span style={{ marginLeft: '0.5rem' }}>
+                                        {calculatePercentage(group.index)}%
+                                    </span>
+                                </div>
+                            </div>
+                        ))}
+                        </Card.Body>
+                    </Card>
+                )}
             </div>
         </div>
+    </div>
     );
 };
 
