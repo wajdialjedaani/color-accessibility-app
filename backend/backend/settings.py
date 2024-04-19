@@ -127,11 +127,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
-    'https://truehue-61186f1da362.herokuapp.com'
+    'https://truehue-61186f1da362.herokuapp.com',
+    'https://truehue.onrender.com'
 ]
 CORS_ORIGIN_WHITELIST = [
      'http://localhost:3000',
-     'https://truehue-61186f1da362.herokuapp.com'
+     'https://truehue-61186f1da362.herokuapp.com',
+     'https://truehue.onrender.com'
 ]
 
 
