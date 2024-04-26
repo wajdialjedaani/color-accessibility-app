@@ -78,7 +78,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'backend.wsgi.application'
+WSGI_APPLICATION = 'backend.wsgi.app'
 
 #MEDIA_ROOT =  os.path.join(BASE_DIR, 'media')
 #MEDIA_URL = '/media/'
