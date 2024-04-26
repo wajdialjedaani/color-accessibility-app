@@ -39,7 +39,7 @@ scipy==1.11.4
 six==1.16.0
 sqlparse==0.4.4
 tensorboard-data-server
-tensorflow-cpu
+tensorflow
 tensorflow-estimator
 
 termcolor==2.3.0
@@ -50,4 +50,3 @@ urllib3==2.1.0
 Werkzeug==3.0.1
 wrapt==1.14.1
 gunicorn
-uvicorn
