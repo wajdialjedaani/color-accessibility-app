@@ -32,7 +32,9 @@ ALLOWED_HOSTS = [
     'truehue.onrender.com',
     'localhost',
     'truehue-app.onrender.com'
-    '127.0.0.1']
+    '127.0.0.1',
+    '.vercel.app',
+    '.now.sh']
 
 
 # Application definition
