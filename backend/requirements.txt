@@ -39,7 +39,7 @@ scipy==1.11.4
 six==1.16.0
 sqlparse==0.4.4
 tensorboard-data-server
-tensorflow~=1.12
+tensorflow~=1.9.1
 tensorflow-estimator
 
 termcolor==2.3.0
