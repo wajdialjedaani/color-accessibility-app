@@ -10,7 +10,10 @@
     {
       "src": "/backend/wsgi.py",
       "use": "@vercel/python",
-      "config": { "maxLambdaSize": "15mb", "runtime": "python-3.10.13" }
+      "config": { 
+        "maxLambdaSize": "15mb", 
+        "runtime": "python3.10.13" 
+      }
     }
   ],
   "routes": [
