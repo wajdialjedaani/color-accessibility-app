@@ -31,7 +31,6 @@ ALLOWED_HOSTS = [
     'truehue-61186f1da362.herokuapp.com', 
     'truehue.onrender.com',
     'localhost',
-    'truehue-app.onrender.com'
     '127.0.0.1',
     '.vercel.app',
     '.now.sh']
