@@ -31,8 +31,9 @@ ALLOWED_HOSTS = [
     'truehue-61186f1da362.herokuapp.com', 
     'truehue.onrender.com',
     'localhost',
-    'truehue-app.onrender.com'
-    '127.0.0.1']
+    '127.0.0.1',
+    '.vercel.app',
+    '.now.sh']
 
 
 # Application definition
@@ -78,7 +79,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'backend.wsgi.application'
+WSGI_APPLICATION = 'backend.wsgi.app'
 
 #MEDIA_ROOT =  os.path.join(BASE_DIR, 'media')
 #MEDIA_URL = '/media/'
