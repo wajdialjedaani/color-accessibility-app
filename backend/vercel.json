@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "outputDirectory": "dist",
   "builds": [
     {
       "src": "build_files.sh",
@@ -16,9 +17,6 @@
         "runtime": "python3.9",
         "includeFiles": ["dist/**"]
       }
-    },
-    {
-      "outputDirectory": "build"
     }
   ],
   "routes": [
