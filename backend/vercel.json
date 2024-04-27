@@ -1,21 +1,17 @@
 {
   "version": 2,
-  "outputDirectory": ".",
+  "outputDirectory": "dist",
   "builds": [
     {
       "src": "build_files.sh",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
+      "use": "@vercel/static-build"
     },
     {
       "src": "/backend/wsgi.py",
       "use": "@vercel/python",
       "config": { 
         "maxLambdaSize": "15mb", 
-        "runtime": "python3.9",
-        "includeFiles": ["dist/**"]
+        "runtime": "python3.9"
       }
     }
   ],
@@ -23,10 +19,6 @@
     {
       "src": "/(.*)",
       "dest": "backend/wsgi.py"
-    },
-    {
-      "src": "/static/(.*)",
-      "dest": "/static/$1"
     }
   ]
 }
